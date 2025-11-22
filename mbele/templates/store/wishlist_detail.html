@@ -1,0 +1,35 @@
+{% extends 'store/base.html' %}
+
+{% block content %}
+<div class="container my-5">
+    <h1 class="fw-bold text-dark mb-4">My Wishlist</h1>
+
+    {% if wishlist %}
+        <div class="row">
+            {% for item in wishlist %}
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="card h-100">
+                        <a href="{% url 'product_detail' item.product.id %}">
+                            <img src="{{ item.product.image.url }}" class="card-img-top" alt="{{ item.product.name }}">
+                        </a>
+                        <div class="card-body">
+                            <h5 class="card-title">{{ item.product.name }}</h5>
+                            <p class="card-text text-muted">{{ item.product.category.name }}</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="fw-bold fs-5">Ksh {{ item.product.price }}</span>
+                                <a href="{% url 'remove_from_wishlist' item.product.id %}" class="btn btn-outline-danger btn-sm">Remove</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="text-center py-5">
+            <h3 class="text-muted">Your wishlist is empty.</h3>
+            <p>Browse our products and add items to your wishlist!</p>
+            <a href="{% url 'store' %}" class="btn btn-primary mt-3">Continue Shopping</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

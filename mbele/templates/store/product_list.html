@@ -1,0 +1,180 @@
+{% extends 'store/base.html' %}
+
+{% block content %}
+
+<!-- Header Section -->
+<div class="row mb-4 align-items-center">
+    <div class="col-md-6">
+        {% if category %}
+            <h1 class="fw-bold text-dark">{{ category.name }}</h1>
+        {% else %}
+            <h1 class="fw-bold text-dark">All Products</h1>
+        {% endif %}
+        <p class="text-muted">Showing {{ products.count }} products.</p>
+    </div>
+</div>
+
+<!-- Styling specifically for the Product Cards -->
+<style>
+    .product-card {
+        border: 1px solid #eee;
+        border-radius: 8px;
+        background: white;
+        transition: box-shadow 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+    .product-card:hover {
+        box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+    }
+    .img-container {
+        position: relative;
+        height: 220px;
+        background: #f8f9fa;
+        overflow: hidden;
+    }
+    .product-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s;
+    }
+    .product-card:hover .product-img {
+        transform: scale(1.05);
+    }
+    
+    /* Badges on Image */
+    .badge-category {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        background: rgba(0,0,0,0.7);
+        color: white;
+        font-size: 0.75rem;
+        padding: 4px 10px;
+        border-radius: 20px;
+        z-index: 2;
+    }
+    .badge-new {
+        position: absolute;
+        top: 40px;
+        left: 10px;
+        background: #10b981; /* Green color from image */
+        color: white;
+        font-size: 0.75rem;
+        padding: 4px 10px;
+        border-radius: 20px;
+        z-index: 2;
+    }
+
+    /* Action Icons (Top Right) */
+    .action-icons {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        z-index: 2;
+    }
+    .icon-circle {
+        width: 32px;
+        height: 32px;
+        background: rgba(255,255,255,0.9);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 5px;
+        cursor: pointer;
+        color: #333;
+        transition: 0.2s;
+    }
+    .icon-circle:hover { background: #fff; color: #8224e3; }
+
+    /* Card Body */
+    .card-body { padding: 20px; }
+    .product-title { font-weight: 700; font-size: 1.1rem; margin-bottom: 5px; color: #222; text-decoration: none; display: block;}
+    .stars { color: #ddd; font-size: 0.8rem; margin-bottom: 10px; }
+    .price { font-size: 1.2rem; font-weight: 800; color: #222; margin-bottom: 10px; }
+    .desc-snippet { font-size: 0.85rem; color: #666; line-height: 1.5; margin-bottom: 20px; height: 40px; overflow: hidden; }
+
+    /* Buttons */
+    .btn-visualize {
+        background-color: #8224e3; /* The Purple Color */
+        color: white;
+        border: none;
+        font-weight: 600;
+        flex: 1;
+        margin-right: 5px;
+    }
+    .btn-visualize:hover { background-color: #6e1ec0; color: white; }
+    
+    .btn-add-cart {
+        background-color: #222;
+        color: white;
+        border: none;
+        font-weight: 600;
+        flex: 1;
+        margin-left: 5px;
+    }
+    .btn-add-cart:hover { background-color: #000; color: white; }
+</style>
+
+<div class="row">
+    {% for product in products %}
+    <div class="col-md-6 col-lg-4 mb-4">
+        <div class="product-card h-100">
+            
+            <!-- Image & Badges -->
+            <div class="img-container">
+                <!-- Category Badge -->
+                <span class="badge-category">{{ product.category.name }}</span>
+                
+                <!-- Static "New Arrival" badge for effect -->
+                {% if forloop.first or product.is_featured %}
+                <span class="badge-new">New Arrival</span>
+                {% endif %}
+
+                <!-- Icons Top Right -->
+                <div class="icon-circle" onclick="toggleWishlist({{ product.id }}, this)">
+    <i class="bi bi-heart"></i>
+</div>
+
+                {% if product.image %}
+                <a href="{% url 'product_detail' product.id %}">
+                    <img src="{{ product.image.url }}" class="product-img" alt="{{ product.name }}">
+                </a>
+                {% else %}
+                <div class="d-flex align-items-center justify-content-center h-100 bg-light text-muted">No Image</div>
+                {% endif %}
+            </div>
+
+            <!-- Details -->
+            <div class="card-body d-flex flex-column">
+                <a href="{% url 'product_detail' product.id %}" class="product-title">{{ product.name }}</a>
+                
+                <!-- Static Stars (Visual only for now) -->
+                <div class="stars">
+                    <i class="bi bi-star"></i> <i class="bi bi-star"></i> <i class="bi bi-star"></i> <i class="bi bi-star"></i> <i class="bi bi-star"></i>
+                    <span class="text-muted ms-1">(0 reviews)</span>
+                </div>
+
+                <div class="price">Ksh {{ product.price }}</div>
+                
+                <p class="desc-snippet">{{ product.description|truncatechars:80 }}</p>
+
+                <div class="mt-auto d-flex">
+                    <button class="btn btn-add-cart py-2 w-100" data-product-id="{{ product.id }}">
+                        <i class="bi bi-plus-lg me-1"></i> Add to Cart
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12 text-center py-5">
+        <h3>No products found</h3>
+        <p class="text-muted">Please check back later or contact us.</p>
+    </div>
+    {% endfor %}
+</div>
+
+{% endblock %}
