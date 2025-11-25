@@ -10,7 +10,11 @@ SECRET_KEY = 'django-insecure-change-me-before-production'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'localhost',
+    '127.0.0.1',
+    'wemisi.com',
+]
 
 # Application definition
 INSTALLED_APPS = [
@@ -47,7 +51,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'store.views.categories_processor',
+                'store.context_processors.categories_processor',
                 'store.context_processors.cart_processor', # Adds cart count to context
                 
                 'store.context_processors.wishlist_processor',
@@ -57,14 +61,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'store.wsgi.application'
-
-# Database
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
@@ -88,3 +84,13 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# settings.py
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        # This will create a file named 'db.sqlite3' in your project root
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}

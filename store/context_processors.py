@@ -1,4 +1,7 @@
-from .models import Product
+from .models import Product, Category
+
+def categories_processor(request):
+    return {'menu_categories': Category.objects.all()}
 
 def cart_processor(request):
     cart = request.session.get('cart', {})

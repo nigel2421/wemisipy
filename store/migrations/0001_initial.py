@@ -2,7 +2,18 @@
 
 import django.db.models.deletion
 from django.db import migrations, models
+from django.utils.text import slugify
 
+def create_initial_categories(apps, schema_editor):
+    Category = apps.get_model('store', 'Category')
+    categories = [
+        {'name': 'GRANITE'},
+        {'name': 'MARBLE'},
+        {'name': 'QUARTZ'},
+    ]
+    for category_data in categories:
+        category_data['slug'] = slugify(category_data['name'])
+        Category.objects.create(**category_data)
 
 class Migration(migrations.Migration):
 
@@ -23,6 +34,7 @@ class Migration(migrations.Migration):
                 'verbose_name_plural': 'Categories',
             },
         ),
+        migrations.RunPython(create_initial_categories),
         migrations.CreateModel(
             name='Product',
             fields=[

@@ -1,27 +1,51 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
-from .models import Product, Category
+from .models import Product, Category, BlogPost
+from django.db.models import Q
 from django.contrib.auth.decorators import login_required
 import urllib.parse # You are using this in cart_detail
 
 # --- EXISTING VIEWS ---
 
-def categories_processor(request):
-    return {'menu_categories': Category.objects.all()}
+
 
 def home(request):
     # Fix: Load all available products for the homepage
     products = Product.objects.filter(available=True).order_by('-id')[:8] 
     return render(request, 'store/home.html', {'products': products})
 
-def product_list(request, category_slug=None):
-    category = None
+def store(request):
+    """
+    This view handles the main store page, including all search and filtering logic.
+    """
     products = Product.objects.filter(available=True)
+    
+    # Get search and filter parameters from the URL
+    query = request.GET.get('q')
+    min_price = request.GET.get('min_price')
+    max_price = request.GET.get('max_price')
+    
+    if query:
+        # Use Q objects for a case-insensitive search in name OR description
+        products = products.filter(Q(name__icontains=query) | Q(description__icontains=query))
+        
+    if min_price:
+        # gte = greater than or equal to
+        products = products.filter(price__gte=min_price)
+        
+    if max_price:
+        # lte = less than or equal to
+        products = products.filter(price__lte=max_price)
+
+    return render(request, 'store/product_list.html', {'category': None, 'products': products})
+
+def category_detail(request, category_slug):
+    category = None
     if category_slug:
         category = get_object_or_404(Category, slug=category_slug)
-        products = products.filter(category=category)
-    return render(request, 'store/product_list.html', {'category': category, 'products': products})
+        products = Product.objects.filter(available=True, category=category)
+        return render(request, 'store/product_list.html', {'category': category, 'products': products})
 
 def product_detail(request, id):
     product = get_object_or_404(Product, id=id)
@@ -134,3 +158,20 @@ def remove_from_wishlist(request, product_id):
         request.session['wishlist'] = wishlist
         
     return redirect('wishlist_detail')
+
+# --- STATIC PAGES VIEWS ---
+
+def careers(request):
+    """Renders the careers page."""
+    return render(request, 'store/careers.html')
+
+def blog(request):
+    """Renders the blog list page."""
+    posts = BlogPost.objects.all() # Get all blog posts from the database
+    return render(request, 'store/blog_list.html', {'posts': posts})
+
+def blog_post_detail(request, slug):
+    """Renders a single blog post detail page."""
+    # Get the post by its slug, or return a 404 Not Found error if it doesn't exist
+    post = get_object_or_404(BlogPost, slug=slug)
+    return render(request, 'store/blog_post_detail.html', {'post': post})

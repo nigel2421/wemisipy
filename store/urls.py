@@ -7,8 +7,8 @@ from . import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.home, name='home'),
-    path('products/', views.product_list, name='store'),
-    path('category/<slug:category_slug>/', views.product_list, name='category_detail'),
+    path('store/', views.store, name='store'),
+    path('category/<slug:category_slug>/', views.category_detail, name='category_detail'),
     path('product/<int:id>/', views.product_detail, name='product_detail'),
     
     # New Cart URLs
@@ -20,8 +20,9 @@ urlpatterns = [
     path('wishlist/', views.wishlist_detail, name='wishlist_detail'),
     path('wishlist/toggle/<int:product_id>/', views.toggle_wishlist, name='toggle_wishlist'),
      path('wishlist/remove/<int:product_id>/', views.remove_from_wishlist, name='remove_from_wishlist'),
-    path('careers/', views.home, name='careers'), 
-    path('blog/', views.home, name='blog'),
+    path('careers/', views.careers, name='careers'), 
+    path('blog/', views.blog, name='blog'), # The main blog page
+    path('blog/<slug:slug>/', views.blog_post_detail, name='blog_post_detail'), # The detail page for a single post
 ]
 
 if settings.DEBUG:

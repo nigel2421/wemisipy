@@ -1,0 +1,30 @@
+# Django
+*.log
+*.pot
+*.pyc
+__pycache__/
+local_settings.py
+db.sqlite3
+
+# User-uploaded files (Product and Blog images)
+# This is the most important line for your request.
+/media/
+
+# Static files (when you run collectstatic)
+/static/
+
+# Virtual Environment
+venv/
+env/
+*.env
+.env
+
+# IDE / Editor specific
+.idea/
+.vscode/
+
+# Sass
+.sass-cache/
+
+# Other
+.DS_Store

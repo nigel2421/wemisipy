@@ -1,0 +1,31 @@
+{% extends 'store/base.html' %}
+
+{% block content %}
+<div class="container my-5">
+    <!-- Page Header -->
+    <div class="text-center mb-5">
+        <h1 class="fw-bold text-dark">WEMISI DIY Blog</h1>
+        <p class="lead text-muted">Creative projects and DIY tasks you can do at home.</p>
+    </div>
+
+    <!-- Blog Posts Grid -->
+    <div class="row">
+        {% for post in posts %}
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card h-100 shadow-sm border-0">
+                {% if post.image %}
+                <img src="{{ post.image.url }}" class="card-img-top" alt="{{ post.title }}" style="height: 200px; object-fit: cover;">
+                {% endif %}
+                <div class="card-body">
+                    <h5 class="card-title fw-bold">{{ post.title }}</h5>
+                    <p class="card-text text-muted">{{ post.content|truncatewords:25 }}</p>
+                    <a href="{% url 'blog_post_detail' post.slug %}" class="btn btn-dark">Read More</a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <p class="text-center">No blog posts have been published yet. Please check back soon!</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
