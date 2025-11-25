@@ -94,3 +94,16 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+import os
+
+# Static files (CSS, JavaScript, images)
+# https://docs.djangoproject.com/en/4.2/howto/static-files/
+
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  # This is where collectstatic will put the files
+import os
+from pathlib import Path
+
+# Build paths inside the project like this: BASE_DIR / 'subdir'.
+BASE_DIR = Path(__file__).resolve().parent.parent
