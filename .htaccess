@@ -1,0 +1,16 @@
+# --- .htaccess file in /home/wemisico/wemisipy/ ---
+
+# Map /static/ URL to the collected STATIC_ROOT directory
+Alias /static/ /home/wemisico/wemisipy/staticfiles/
+<Directory /home/wemisico/wemisipy/staticfiles>
+    Require all granted
+</Directory>
+
+# Map /media/ URL to the MEDIA_ROOT directory
+Alias /media/ /home/wemisico/wemisipy/media/
+<Directory /home/wemisico/wemisipy/media>
+    Require all granted
+</Directory>
+
+# You may need to ensure Passenger continues handling Python requests below this
+# PassengerWsgiFile passenger_wsgi.py
