@@ -5,7 +5,7 @@
 <!-- Hero Banner -->
 <div class="p-5 mb-5 rounded-3" style="background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); border: 1px solid #eee;">
     <div class="container-fluid py-3">
-      <h1 class="display-5 fw-bold text-dark">Wemisi Premium Hardware</h1>
+      <h1 class="display-5 fw-bold text-dark">Wemisi </h1>
       <p class="col-md-8 fs-4 text-muted">Explore our exclusive collection of Marble, Granite, and Custom Fencing.</p>
       <a href="{% url 'store' %}" class="btn btn-dark btn-lg px-5 mt-3">Shop Now</a>
     </div>
@@ -47,8 +47,8 @@
                 
                 <!-- WISHLIST / SHARE ICONS -->
                 <div class="action-icons">
-                    <div class="icon-circle"><i class="bi bi-share"></i></div>
-                    <div class="icon-circle"><i class="bi bi-heart"></i></div>
+                    <!--<div class="icon-circle"><i class="bi bi-share"></i></div>
+                    <div class="icon-circle"><i class="bi bi-heart"></i></div>-->
                 </div>
 
                 {% if product.image %}
@@ -65,7 +65,7 @@
                 <div class="text-dark fw-bold mb-3">Ksh {{ product.price }}</div>
                 
                 <div class="mt-auto d-flex">
-                    <button class="btn btn-visualize btn-sm"><i class="bi bi-stars"></i> Visualize</button>
+                    <!--<button class="btn btn-visualize btn-sm"><i class="bi bi-stars"></i> Visualize</button>-->
                     <!-- Add to Cart button with data attribute -->
                     <button class="btn btn-add-cart btn-sm" data-product-id="{{ product.id }}">
                         <i class="bi bi-plus-lg"></i> Add

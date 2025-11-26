@@ -49,25 +49,19 @@
             <p><strong>Category:</strong> {{ product.category.name }}</p>
             
             <div class="mt-4">
-                <a href="{{ whatsapp_url }}" class="btn btn-success btn-lg" target="_blank">Contact to Order</a>
+               <!-- <a href="{{ whatsapp_url }}" class="btn btn-success btn-lg" target="_blank">Contact to Order</a>-->
                 <a href="{% url 'store' %}" class="btn btn-outline-secondary btn-lg ms-2">Back to Store</a>
                 
-                <!-- Wishlist Button -->
+                <!-- Add to Cart Button (replaces wishlist) -->
                 <div class="mt-3">
                     {% if user.is_authenticated %}
-                        <button id="wishlist-btn" class="btn {% if in_wishlist %}btn-danger{% else %}btn-outline-danger{% endif %}" data-product-id="{{ product.id }}" data-url="{% url 'toggle_wishlist' product.id %}">
-                            <i class="fa {% if in_wishlist %}fa-heart{% else %}fa-heart-o{% endif %}"></i>
-                            <span id="wishlist-text">
-                                {% if in_wishlist %}
-                                    Remove from Wishlist
-                                {% else %}
-                                    Add to Wishlist
-                                {% endif %}
-                            </span>
+                        <button id="add-to-cart-btn" class="btn btn-primary" data-product-id="{{ product.id }}" data-url="/add-to-cart/{{ product.id }}/">
+                            <i class="fa fa-shopping-cart"></i>
+                            <span id="add-to-cart-text"> Add to Cart</span>
                         </button>
                     {% else %}
                         <a href="{% url 'login' %}?next={{ request.path }}" class="btn btn-outline-danger">
-                            <i class="fa fa-heart-o"></i> Add to Wishlist 
+                            <i class="fa fa-heart-o"></i> Add to Cart 
                         </a>
                     {% endif %}
                 </div>
@@ -80,46 +74,56 @@
 {% block extra_js %}
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const wishlistBtn = document.getElementById('wishlist-btn');
-    if (wishlistBtn) {
-        wishlistBtn.addEventListener('click', function() {
+    const btn = document.getElementById('add-to-cart-btn');
+    if (btn) {
+        btn.addEventListener('click', function(event) {
+            event.preventDefault();
             const url = this.dataset.url;
-            const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+            // Try to get CSRF token from common locations
+            const csrftokenInput = document.querySelector('[name=csrfmiddlewaretoken]');
+            const csrftokenMeta = document.querySelector('meta[name="csrf-token"], meta[name="csrfmiddlewaretoken"]');
+            const csrftoken = (csrftokenInput && csrftokenInput.value) || (csrftokenMeta && csrftokenMeta.getAttribute('content')) || null;
 
             fetch(url, {
                 method: 'POST',
                 headers: {
                     'X-CSRFToken': csrftoken,
-                    'Content-Type': 'application/json'
-                }
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                credentials: 'same-origin',
+                body: JSON.stringify({ product_id: this.dataset.productId || this.getAttribute('data-product-id') })
             })
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) return response.text().then(text => { throw new Error(text || 'Request failed'); });
+                return response.json().catch(() => ({}));
+            })
             .then(data => {
-                // Update the main wishlist count in the header
-                const wishlistCountElement = document.getElementById('wishlist-count');
-                if (wishlistCountElement) {
-                    wishlistCountElement.textContent = data.wishlist_count;
+                // Update the main cart badge in the header if present
+                const cartBadge = document.getElementById('cart-badge');
+                if (cartBadge && typeof data.cart_count !== 'undefined') {
+                    cartBadge.textContent = data.cart_count;
+                    cartBadge.style.display = data.cart_count > 0 ? 'inline-block' : 'none';
                 }
 
-                // Update the button's appearance and text
+                // Update the button's appearance and text to indicate success
                 const icon = this.querySelector('i');
-                const text = this.querySelector('#wishlist-text');
-
-                if (data.added) {
-                    this.classList.remove('btn-outline-danger');
-                    this.classList.add('btn-danger');
-                    icon.classList.remove('fa-heart-o');
-                    icon.classList.add('fa-heart');
-                    text.textContent = ' Remove from Wishlist';
-                } else {
-                    this.classList.remove('btn-danger');
-                    this.classList.add('btn-outline-danger');
-                    icon.classList.remove('fa-heart');
-                    icon.classList.add('fa-heart-o');
-                    text.textContent = ' Add to Wishlist';
+                const text = this.querySelector('#add-to-cart-text');
+                this.classList.remove('btn-primary');
+                this.classList.add('btn-success');
+                if (icon) {
+                    icon.className = 'fa fa-check';
+                }
+                if (text) {
+                    text.textContent = ' Added to Cart';
                 }
             })
-            .catch(error => console.error('Error:', error));
+            .catch(error => {
+                console.error('Add to cart error:', error);
+                // Optionally provide user feedback
+                const text = this.querySelector('#add-to-cart-text');
+                if (text) text.textContent = ' Error adding to cart';
+            });
         });
     }
 });

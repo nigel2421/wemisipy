@@ -1,30 +1,18 @@
-# Django
+# Django project specific ignores
 *.log
 *.pot
 *.pyc
 __pycache__/
 local_settings.py
 db.sqlite3
+db.sqlite3-journal
 
-# User-uploaded files (Product and Blog images)
-# This is the most important line for your request.
+# User-uploaded media files (product images, etc.)
 /media/
 
-# Static files (when you run collectstatic)
-/static/
+# Collected static files for deployment
+/staticfiles/
 
-# Virtual Environment
-venv/
-env/
-*.env
+# Environment variables
 .env
-
-# IDE / Editor specific
-.idea/
-.vscode/
-
-# Sass
-.sass-cache/
-
-# Other
-.DS_Store
+venv/
