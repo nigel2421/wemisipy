@@ -1,11 +1,12 @@
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from . import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('accounts/', include('django.contrib.auth.urls')), 
     path('', views.home, name='home'),
     path('store/', views.store, name='store'),
     path('category/<slug:category_slug>/', views.category_detail, name='category_detail'),
