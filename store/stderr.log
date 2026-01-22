@@ -1,0 +1,203 @@
+node:internal/modules/cjs/loader:1368
+  throw err;
+  ^
+
+Error: Cannot find module '/home/wemisico/wemisipy/store//server.js'
+Require stack:
+- /usr/local/lsws/fcgi-bin/lsnode.js
+    at Module._resolveFilename (node:internal/modules/cjs/loader:1365:15)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1021:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1026:22)
+    at Module._load (node:internal/modules/cjs/loader:1175:37)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:235:24)
+    at Module.require (node:internal/modules/cjs/loader:1445:12)
+    at require (node:internal/modules/helpers:135:16)
+    at startApplication (/usr/local/lsws/fcgi-bin/lsnode.js:48:15)
+    at Object.<anonymous> (/usr/local/lsws/fcgi-bin/lsnode.js:16:1) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [ '/usr/local/lsws/fcgi-bin/lsnode.js' ]
+}
+
+Node.js v22.18.0
+node:internal/modules/cjs/loader:1368
+  throw err;
+  ^
+
+Error: Cannot find module '/home/wemisico/wemisipy/store//server.js'
+Require stack:
+- /usr/local/lsws/fcgi-bin/lsnode.js
+    at Module._resolveFilename (node:internal/modules/cjs/loader:1365:15)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1021:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1026:22)
+    at Module._load (node:internal/modules/cjs/loader:1175:37)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:235:24)
+    at Module.require (node:internal/modules/cjs/loader:1445:12)
+    at require (node:internal/modules/helpers:135:16)
+    at startApplication (/usr/local/lsws/fcgi-bin/lsnode.js:48:15)
+    at Object.<anonymous> (/usr/local/lsws/fcgi-bin/lsnode.js:16:1) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [ '/usr/local/lsws/fcgi-bin/lsnode.js' ]
+}
+
+Node.js v22.18.0
+node:internal/modules/cjs/loader:1368
+  throw err;
+  ^
+
+Error: Cannot find module '/home/wemisico/wemisipy/store//server.js'
+Require stack:
+- /usr/local/lsws/fcgi-bin/lsnode.js
+    at Module._resolveFilename (node:internal/modules/cjs/loader:1365:15)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1021:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1026:22)
+    at Module._load (node:internal/modules/cjs/loader:1175:37)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:235:24)
+    at Module.require (node:internal/modules/cjs/loader:1445:12)
+    at require (node:internal/modules/helpers:135:16)
+    at startApplication (/usr/local/lsws/fcgi-bin/lsnode.js:48:15)
+    at Object.<anonymous> (/usr/local/lsws/fcgi-bin/lsnode.js:16:1) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [ '/usr/local/lsws/fcgi-bin/lsnode.js' ]
+}
+
+Node.js v22.18.0
+node:internal/modules/cjs/loader:1368
+  throw err;
+  ^
+
+Error: Cannot find module '/home/wemisico/wemisipy/store//server.js'
+Require stack:
+- /usr/local/lsws/fcgi-bin/lsnode.js
+    at Module._resolveFilename (node:internal/modules/cjs/loader:1365:15)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1021:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1026:22)
+    at Module._load (node:internal/modules/cjs/loader:1175:37)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:235:24)
+    at Module.require (node:internal/modules/cjs/loader:1445:12)
+    at require (node:internal/modules/helpers:135:16)
+    at startApplication (/usr/local/lsws/fcgi-bin/lsnode.js:48:15)
+    at Object.<anonymous> (/usr/local/lsws/fcgi-bin/lsnode.js:16:1) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [ '/usr/local/lsws/fcgi-bin/lsnode.js' ]
+}
+
+Node.js v22.18.0
+Traceback (most recent call last):
+  File "/home/wemisico/wemisipy/store/passenger_wsgi.py", line 8, in <module>
+    application = get_wsgi_application()
+  File "/home/wemisico/virtualenv/wemisipy/3.13/lib/python3.13/site-packages/django/core/wsgi.py", line 12, in get_wsgi_application
+    django.setup(set_prefix=False)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/home/wemisico/virtualenv/wemisipy/3.13/lib/python3.13/site-packages/django/__init__.py", line 19, in setup
+    configure_logging(settings.LOGGING_CONFIG, settings.LOGGING)
+                      ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/wemisico/virtualenv/wemisipy/3.13/lib/python3.13/site-packages/django/conf/__init__.py", line 102, in __getattr__
+    self._setup(name)
+    ~~~~~~~~~~~^^^^^^
+  File "/home/wemisico/virtualenv/wemisipy/3.13/lib/python3.13/site-packages/django/conf/__init__.py", line 89, in _setup
+    self._wrapped = Settings(settings_module)
+                    ~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/home/wemisico/virtualenv/wemisipy/3.13/lib/python3.13/site-packages/django/conf/__init__.py", line 217, in __init__
+    mod = importlib.import_module(self.SETTINGS_MODULE)
+  File "/opt/alt/python313/lib64/python3.13/importlib/__init__.py", line 88, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1310, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1324, in _find_and_load_unlocked
+ModuleNotFoundError: No module named 'store'
+Traceback (most recent call last):
+  File "/home/wemisico/wemisipy/store/passenger_wsgi.py", line 8, in <module>
+    application = get_wsgi_application()
+  File "/home/wemisico/virtualenv/wemisipy/3.13/lib/python3.13/site-packages/django/core/wsgi.py", line 12, in get_wsgi_application
+    django.setup(set_prefix=False)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/home/wemisico/virtualenv/wemisipy/3.13/lib/python3.13/site-packages/django/__init__.py", line 19, in setup
+    configure_logging(settings.LOGGING_CONFIG, settings.LOGGING)
+                      ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/wemisico/virtualenv/wemisipy/3.13/lib/python3.13/site-packages/django/conf/__init__.py", line 102, in __getattr__
+    self._setup(name)
+    ~~~~~~~~~~~^^^^^^
+  File "/home/wemisico/virtualenv/wemisipy/3.13/lib/python3.13/site-packages/django/conf/__init__.py", line 89, in _setup
+    self._wrapped = Settings(settings_module)
+                    ~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/home/wemisico/virtualenv/wemisipy/3.13/lib/python3.13/site-packages/django/conf/__init__.py", line 217, in __init__
+    mod = importlib.import_module(self.SETTINGS_MODULE)
+  File "/opt/alt/python313/lib64/python3.13/importlib/__init__.py", line 88, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1310, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1324, in _find_and_load_unlocked
+ModuleNotFoundError: No module named 'store'
+[UID:2270][3626097] Child process with pid: 3626183 was killed by signal: 15, core dumped: no
+Traceback (most recent call last):
+  File "/home/wemisico/wemisipy/store/passenger_wsgi.py", line 8, in <module>
+    application = get_wsgi_application()
+  File "/home/wemisico/virtualenv/wemisipy/3.13/lib/python3.13/site-packages/django/core/wsgi.py", line 12, in get_wsgi_application
+    django.setup(set_prefix=False)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/home/wemisico/virtualenv/wemisipy/3.13/lib/python3.13/site-packages/django/__init__.py", line 19, in setup
+    configure_logging(settings.LOGGING_CONFIG, settings.LOGGING)
+                      ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/wemisico/virtualenv/wemisipy/3.13/lib/python3.13/site-packages/django/conf/__init__.py", line 102, in __getattr__
+    self._setup(name)
+    ~~~~~~~~~~~^^^^^^
+  File "/home/wemisico/virtualenv/wemisipy/3.13/lib/python3.13/site-packages/django/conf/__init__.py", line 89, in _setup
+    self._wrapped = Settings(settings_module)
+                    ~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/home/wemisico/virtualenv/wemisipy/3.13/lib/python3.13/site-packages/django/conf/__init__.py", line 217, in __init__
+    mod = importlib.import_module(self.SETTINGS_MODULE)
+  File "/opt/alt/python313/lib64/python3.13/importlib/__init__.py", line 88, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1310, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1324, in _find_and_load_unlocked
+ModuleNotFoundError: No module named 'store'
+[UID:2270][3626097] Child process with pid: 3626402 was killed by signal: 15, core dumped: no
+Traceback (most recent call last):
+  File "/home/wemisico/wemisipy/store/passenger_wsgi.py", line 8, in <module>
+    application = get_wsgi_application()
+  File "/home/wemisico/virtualenv/wemisipy/3.13/lib/python3.13/site-packages/django/core/wsgi.py", line 12, in get_wsgi_application
+    django.setup(set_prefix=False)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/home/wemisico/virtualenv/wemisipy/3.13/lib/python3.13/site-packages/django/__init__.py", line 19, in setup
+    configure_logging(settings.LOGGING_CONFIG, settings.LOGGING)
+                      ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/wemisico/virtualenv/wemisipy/3.13/lib/python3.13/site-packages/django/conf/__init__.py", line 102, in __getattr__
+    self._setup(name)
+    ~~~~~~~~~~~^^^^^^
+  File "/home/wemisico/virtualenv/wemisipy/3.13/lib/python3.13/site-packages/django/conf/__init__.py", line 89, in _setup
+    self._wrapped = Settings(settings_module)
+                    ~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/home/wemisico/virtualenv/wemisipy/3.13/lib/python3.13/site-packages/django/conf/__init__.py", line 217, in __init__
+    mod = importlib.import_module(self.SETTINGS_MODULE)
+  File "/opt/alt/python313/lib64/python3.13/importlib/__init__.py", line 88, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1310, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1324, in _find_and_load_unlocked
+ModuleNotFoundError: No module named 'store'
+[UID:2270][3626097] Child process with pid: 3626416 was killed by signal: 15, core dumped: no
