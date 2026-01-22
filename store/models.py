@@ -2,7 +2,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
-from ckeditor.fields import RichTextField
+from django_ckeditor_5.fields import CKEditor5Field
 
 class Category(models.Model):
     name = models.CharField(max_length=200)
@@ -48,7 +48,7 @@ class Wishlist(models.Model):
 class BlogPost(models.Model):
     title = models.CharField(max_length=200)
     slug = models.SlugField(unique=True, max_length=255, help_text="Auto-generated from title. Used for the URL.")
-    content = RichTextField(help_text="The main content of the blog post.")
+    content = CKEditor5Field('Content', config_name='extends', help_text="The main content of the blog post.")
     image = models.ImageField(upload_to='blog_images/', help_text="A feature image for the blog post.")
     published_date = models.DateTimeField(default=timezone.now)
     author = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)

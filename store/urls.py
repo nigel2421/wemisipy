@@ -25,7 +25,7 @@ urlpatterns = [
     path('careers/', views.careers, name='careers'), 
     path('blog/', views.blog, name='blog'), # The main blog page
     path('blog/<slug:slug>/', views.blog_post_detail, name='blog_post_detail'), # The detail page for a single post
-    path('ckeditor/', include('ckeditor_uploader.urls')),
+    path("ckeditor5/", include('django_ckeditor_5.urls'), name="ck_editor_5_upload_file"),
 ]
 
 if settings.DEBUG:
