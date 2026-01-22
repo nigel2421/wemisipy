@@ -1,3 +1,4 @@
+
 from pathlib import Path
 import os
 
@@ -10,11 +11,8 @@ SECRET_KEY = 'django-insecure-change-me-before-production'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [
-    'localhost',
-    '127.0.0.1',
-    'wemisi.com',
-]
+# Allow all host headers for development purposes
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 INSTALLED_APPS = [
@@ -25,6 +23,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'store',  # Your app
+    'ckeditor',
+    'ckeditor_uploader',
 ]
 
 MIDDLEWARE = [
@@ -53,7 +53,6 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'store.context_processors.categories_processor',
                 'store.context_processors.cart_processor', # Adds cart count to context
-                
                 'store.context_processors.wishlist_processor',
             ],
         },
@@ -76,12 +75,7 @@ TIME_ZONE = 'Africa/Nairobi'
 USE_I18N = True
 USE_TZ = True
 
-
-
-
-
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
 
 # settings.py
 DATABASES = {
@@ -92,27 +86,29 @@ DATABASES = {
     }
 }
 
-import os
-
 # Static files (CSS, JavaScript, images)
-# https://docs.djangoproject.com/en/4.2/howto/static-files/
-
-
-
-# -------------------------------------------------------
-# STATIC FILES
-# -------------------------------------------------------
 STATIC_URL = '/static/'
-
-# This is where Django will collect static files
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),
+    os.path.join(BASE_DIR, 'mbele', 'static'), # Corrected path
+    '/nix/store/p2psasdk61ly8xqvxc8kd9q77rj01jxs-python3.11-django-ckeditor-6.7/lib/python3.11/site-packages/ckeditor/static',
 ]
 
-# -------------------------------------------------------
-# MEDIA FILES (uploaded images)
-# -------------------------------------------------------
+# Media files (uploaded images)
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+# CSRF Trusted Origins
+CSRF_TRUSTED_ORIGINS = [
+    'https://*.cloudworkstations.dev',
+]
+
+# CKEditor Configuration
+CKEDITOR_UPLOAD_PATH = "uploads/"
+CKEDITOR_CONFIGS = {
+    'default': {
+        'toolbar': 'full',
+        'height': 300,
+        'width': '100%',
+    },
+}

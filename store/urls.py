@@ -1,3 +1,4 @@
+
 from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
@@ -24,6 +25,7 @@ urlpatterns = [
     path('careers/', views.careers, name='careers'), 
     path('blog/', views.blog, name='blog'), # The main blog page
     path('blog/<slug:slug>/', views.blog_post_detail, name='blog_post_detail'), # The detail page for a single post
+    path('ckeditor/', include('ckeditor_uploader.urls')),
 ]
 
 if settings.DEBUG:
