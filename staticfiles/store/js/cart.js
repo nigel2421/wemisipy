@@ -103,6 +103,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		}
 
 		document.addEventListener('click', interactionHandler, true);
+		document.addEventListener('pointerdown', interactionHandler, true);
 
 		document.addEventListener('submit', function(event) {
 			const form = event.target;

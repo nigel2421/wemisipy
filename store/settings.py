@@ -1,4 +1,3 @@
-
 from pathlib import Path
 import os
 
@@ -12,7 +11,7 @@ SECRET_KEY = 'django-insecure-change-me-before-production'
 DEBUG = True
 
 # Allow all host headers for development purposes
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['*', 'www.wemisi.com']
 
 # Application definition
 INSTALLED_APPS = [
@@ -91,7 +90,6 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'mbele', 'static'), # Corrected path
-    '/nix/store/p2psasdk61ly8xqvxc8kd9q77rj01jxs-python3.11-django-ckeditor-6.7/lib/python3.11/site-packages/ckeditor/static',
 ]
 
 # Media files (uploaded images)
