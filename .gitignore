@@ -1,18 +1,2 @@
-# Django project specific ignores
-*.log
-*.pot
-*.pyc
-__pycache__/
-local_settings.py
-db.sqlite3
-db.sqlite3-journal
-
-# User-uploaded media files (product images, etc.)
-/media/
-
-# Collected static files for deployment
-/staticfiles/
-
-# Environment variables
-.env
-venv/
+shell.nix
+.nix-shell/
