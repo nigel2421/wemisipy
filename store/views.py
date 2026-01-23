@@ -1,13 +1,12 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
-from .models import Product, Category, BlogPost
+from .models import Product, Category, BlogPost, ProductImage
 from django.db.models import Q
 from django.contrib.auth.decorators import login_required
 import urllib.parse # You are using this in cart_detail
 
 # --- EXISTING VIEWS ---
-
 
 
 def home(request):
@@ -49,6 +48,7 @@ def category_detail(request, category_slug):
 
 def product_detail(request, id):
     product = get_object_or_404(Product, id=id)
+    images = ProductImage.objects.filter(product=product)
     in_wishlist = False
     # Check if the user is logged in and if the product is in their wishlist
     if request.user.is_authenticated:
@@ -56,6 +56,7 @@ def product_detail(request, id):
     
     context = {
         'product': product,
+        'images': images,
         'in_wishlist': in_wishlist
     }
     return render(request, 'store/product_detail.html', context)
