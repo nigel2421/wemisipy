@@ -1,5 +1,31 @@
 # --- .htaccess file in /home/wemisico/wemisipy/ ---
 
+############################################
+## Passenger / Django application setup   ##
+############################################
+
+# Root of the Django project (this directory)
+PassengerAppRoot /home/wemisico/wemisipy
+
+# Base URI for the app (site is mounted at domain root)
+PassengerBaseURI /
+
+# WSGI application entry point
+PassengerAppType wsgi
+PassengerStartupFile passenger_wsgi.py
+
+# Path to the Python interpreter in your cPanel virtualenv
+# (If your cPanel shows a slightly different path, update it there
+# and keep this file in sync.)
+PassengerPython /home/wemisico/virtualenv/wemisipy/3.13/bin/python
+
+# Django settings module
+PassengerEnvVar DJANGO_SETTINGS_MODULE store.settings
+
+############################################
+## Static and media files                 ##
+############################################
+
 # Map /static/ URL to the collected STATIC_ROOT directory
 Alias /static/ /home/wemisico/wemisipy/staticfiles/
 <Directory /home/wemisico/wemisipy/staticfiles>
@@ -11,6 +37,3 @@ Alias /media/ /home/wemisico/wemisipy/media/
 <Directory /home/wemisico/wemisipy/media>
     Require all granted
 </Directory>
-
-# You may need to ensure Passenger continues handling Python requests below this
-# PassengerWsgiFile passenger_wsgi.py
