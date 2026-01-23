@@ -1,0 +1,5 @@
+User-agent: *
+Disallow: /admin/
+Disallow: /accounts/
+
+Sitemap: http://www.wemisi.com/sitemap.xml

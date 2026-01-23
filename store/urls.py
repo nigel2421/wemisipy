@@ -4,6 +4,13 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from . import views
+from .sitemaps import StaticViewSitemap, ProductSitemap
+from django.contrib.sitemaps.views import sitemap
+
+sitemaps = {
+    'static': StaticViewSitemap,
+    'products': ProductSitemap,
+}
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -26,7 +33,8 @@ urlpatterns = [
     path('blog/', views.blog, name='blog'), # The main blog page
     path('blog/<slug:slug>/', views.blog_post_detail, name='blog_post_detail'), # The detail page for a single post
     path("ckeditor5/", include('django_ckeditor_5.urls'), name="ck_editor_5_upload_file"),
+    path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
 ]
 
-urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
-urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

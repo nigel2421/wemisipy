@@ -13,6 +13,7 @@
     pkgs.python311Packages.django
     pkgs.python311Packages.pillow
     pkgs.python311Packages.gunicorn
+    pkgs.python311Packages.whitenoise
     # pkgs.nodePackages.nodemon
   ];
 
