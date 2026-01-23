@@ -23,6 +23,7 @@ urlpatterns = [
     # New Cart URLs
     path('add-to-cart/<int:product_id>/', views.add_to_cart, name='add_to_cart'),
     path('cart/', views.cart_detail, name='cart_detail'),
+    path('cart/update/<int:product_id>/', views.update_cart_item, name='update_cart_item'),
     path('clear-cart/', views.clear_cart, name='clear_cart'),
 
     # Wishlist URLs
@@ -32,6 +33,7 @@ urlpatterns = [
     path('careers/', views.careers, name='careers'), 
     path('blog/', views.blog, name='blog'), # The main blog page
     path('blog/<slug:slug>/', views.blog_post_detail, name='blog_post_detail'), # The detail page for a single post
+    path('search-suggestions/', views.search_suggestions, name='search_suggestions'),
     path("ckeditor5/", include('django_ckeditor_5.urls'), name="ck_editor_5_upload_file"),
     path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
 ]

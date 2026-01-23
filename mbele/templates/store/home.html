@@ -9,6 +9,7 @@
       <p class="col-md-8 fs-4 text-muted">Explore our exclusive collection of Marble, Granite, and Custom Fencing.</p>
       <a href="{% url 'store' %}" class="btn btn-dark btn-lg px-5 mt-3">Shop Now</a>
     </div>
+    </div>
 </div>
 
 <div class="d-flex justify-content-between align-items-center mb-4">
@@ -79,6 +80,47 @@
         <p class="text-muted">No products loaded yet.</p>
     </div>
     {% endfor %}
+</div>
+
+<!-- Customer testimonials -->
+<div class="mt-5">
+    <h2 class="fw-bold mb-3">What our customers say</h2>
+    <div id="testimonialsCarousel" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body">
+                        <p class="mb-2 fst-italic">“Wemisi supplied all our kitchen countertops on time and the finish is beautiful. The team was responsive on WhatsApp throughout.”</p>
+                        <div class="small fw-semibold mb-0">— Sarah, Nairobi homeowner</div>
+                    </div>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body">
+                        <p class="mb-2 fst-italic">“Reliable quality and fair pricing for our fencing projects. Delivery and offloading were handled professionally.”</p>
+                        <div class="small fw-semibold mb-0">— James, Contractor</div>
+                    </div>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body">
+                        <p class="mb-2 fst-italic">“Great experience end-to-end. The team helped us choose the right marble and organized installation for our showroom.”</p>
+                        <div class="small fw-semibold mb-0">— Amina, Interior designer</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#testimonialsCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#testimonialsCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div>
 </div>
 
 {% endblock %}

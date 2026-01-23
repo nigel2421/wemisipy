@@ -1,10 +1,12 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import JsonResponse
+from django.urls import reverse
 from django.views.decorators.http import require_POST
 from .models import Product, Category, BlogPost, ProductImage
 from django.db.models import Q
 from django.contrib.auth.decorators import login_required
-import urllib.parse # You are using this in cart_detail
+import urllib.parse  # You are using this in cart_detail
+import json
 
 # --- EXISTING VIEWS ---
 
@@ -49,17 +51,37 @@ def category_detail(request, category_slug):
 def product_detail(request, id):
     product = get_object_or_404(Product, id=id)
     images = ProductImage.objects.filter(product=product)
-    in_wishlist = False
-    # Check if the user is logged in and if the product is in their wishlist
-    if request.user.is_authenticated:
-        in_wishlist = request.user.wishlist_set.filter(product=product).exists()
-    
+
+    # Simple "similar products" and "frequently bought together" suggestions
+    similar_products = (
+        Product.objects.filter(available=True, category=product.category)
+        .exclude(id=product.id)[:4]
+    )
+    frequently_bought_together = (
+        Product.objects.filter(available=True, category=product.category)
+        .exclude(id__in=[product.id])[:3]
+    )
+
+    # WhatsApp CTA link for this specific product
+    phone_number = "+254721202052"
+    message = (
+        f"Hello! I'm interested in this product:\n\n"
+        f"- {product.name} (Category: {product.category.name})\n"
+        f"Price: Ksh {product.price}\n"
+        f"Dimensions: {product.dimensions or 'N/A'}\n\n"
+        f"Product page: {request.build_absolute_uri()}\n\n"
+        f"Please provide me with more information. Thank you."
+    )
+    whatsapp_url = f"https://wa.me/{phone_number}?text={urllib.parse.quote(message)}"
+
     context = {
-        'product': product,
-        'images': images,
-        'in_wishlist': in_wishlist
+        "product": product,
+        "images": images,
+        "similar_products": similar_products,
+        "frequently_bought_together": frequently_bought_together,
+        "whatsapp_url": whatsapp_url,
     }
-    return render(request, 'store/product_detail.html', context)
+    return render(request, "store/product_detail.html", context)
 
 # --- NEW CART VIEWS ---
 
@@ -114,6 +136,66 @@ def cart_detail(request):
         'total_price': total_price,
         'whatsapp_url': whatsapp_url
     })
+
+
+@require_POST
+def update_cart_item(request, product_id):
+    """
+    Adjust quantity for a single cart line item.
+    Expects an 'action' of 'inc' or 'dec' in POST JSON.
+    Returns updated line total, quantity and cart total.
+    """
+    cart = request.session.get("cart", {})
+    product_id_str = str(product_id)
+    action = ""
+
+    try:
+        data = json.loads(request.body or "{}")
+        action = data.get("action", "")
+    except Exception:
+        action = request.POST.get("action", "")
+
+    quantity = cart.get(product_id_str, 0)
+
+    if action == "inc":
+        quantity += 1
+    elif action == "dec":
+        quantity = max(quantity - 1, 0)
+
+    if quantity <= 0:
+        cart.pop(product_id_str, None)
+    else:
+        cart[product_id_str] = quantity
+
+    request.session["cart"] = cart
+
+    cart_total = 0
+    line_total = 0
+
+    try:
+        product = Product.objects.get(id=product_id)
+    except Product.DoesNotExist:
+        return JsonResponse({"error": "Product not found"}, status=404)
+
+    for pid, qty in cart.items():
+        try:
+            p = Product.objects.get(id=pid)
+            cart_total += p.price * qty
+        except Product.DoesNotExist:
+            continue
+
+    if product_id_str in cart:
+        line_total = product.price * cart[product_id_str]
+
+    return JsonResponse(
+        {
+            "product_id": product_id,
+            "quantity": cart.get(product_id_str, 0),
+            "line_total": float(line_total),
+            "cart_total": float(cart_total),
+            "cart_count": sum(cart.values()),
+        }
+    )
 
 def clear_cart(request):
     request.session['cart'] = {}
@@ -176,3 +258,27 @@ def blog_post_detail(request, slug):
     # Get the post by its slug, or return a 404 Not Found error if it doesn't exist
     post = get_object_or_404(BlogPost, slug=slug)
     return render(request, 'store/blog_post_detail.html', {'post': post})
+
+
+def search_suggestions(request):
+    """
+    Lightweight JSON endpoint for inline search suggestions.
+    Returns up to 5 matching products by name.
+    """
+    query = request.GET.get("q", "").strip()
+    results = []
+
+    if query:
+        products = (
+            Product.objects.filter(available=True, name__icontains=query)
+            .order_by("name")[:5]
+        )
+        for product in products:
+            results.append(
+                {
+                    "name": product.name,
+                    "url": reverse("product_detail", args=[product.id]),
+                }
+            )
+
+    return JsonResponse({"results": results})

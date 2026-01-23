@@ -3,69 +3,162 @@
 {% block content %}
 <div class="container">
     <div class="row mt-5">
-        <!-- Product Image Carousel -->
+        <!-- Product Image Gallery -->
         <div class="col-md-6 mb-4">
-            <div id="productCarousel" class="carousel slide" data-bs-ride="carousel">
-                <div class="carousel-indicators">
-                    {% if product.image %}
-                    <button type="button" data-bs-target="#productCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-                    {% endif %}
-                    {% for image in images %}
-                        <button type="button" data-bs-target="#productCarousel" data-bs-slide-to="{{ forloop.counter }}" aria-label="Slide {{ forloop.counter|add:1 }}"></button>
-                    {% endfor %}
-                </div>
-                <div class="carousel-inner">
-                    {% if product.image %}
-                    <div class="carousel-item active">
-                        <img src="{{ product.image.url }}" class="d-block w-100" alt="{{ product.name }}">
-                    </div>
-                    {% endif %}
-                    {% for image in images %}
-                        <div class="carousel-item">
-                            <img src="{{ image.image.url }}" class="d-block w-100" alt="{{ product.name }}">
+            <div class="border rounded p-2 mb-3 bg-white">
+                <div id="productCarousel" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-inner">
+                        {% if product.image %}
+                        <div class="carousel-item active">
+                            <img src="{{ product.image.url }}" class="d-block w-100 img-fluid" alt="{{ product.name }}" style="cursor: zoom-in;">
                         </div>
-                    {% endfor %}
+                        {% endif %}
+                        {% for image in images %}
+                            <div class="carousel-item{% if not product.image and forloop.first %} active{% endif %}">
+                                <img src="{{ image.image.url }}" class="d-block w-100 img-fluid" alt="{{ product.name }}" style="cursor: zoom-in;">
+                            </div>
+                        {% endfor %}
+                    </div>
+                    {% if product.image or images %}
+                    <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#productCarousel" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                    {% endif %}
                 </div>
-                <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel" data-bs-slide="prev">
-                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Previous</span>
-                </button>
-                <button class="carousel-control-next" type="button" data-bs-target="#productCarousel" data-bs-slide="next">
-                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Next</span>
-                </button>
             </div>
+
+            <!-- Thumbnail strip -->
+            {% if product.image or images %}
+            <div class="d-flex gap-2 flex-wrap">
+                {% if product.image %}
+                <img src="{{ product.image.url }}" class="img-thumbnail flex-shrink-0" style="width: 80px; height: 80px; object-fit: cover; cursor: pointer;"
+                     data-bs-target="#productCarousel" data-bs-slide-to="0" alt="{{ product.name }}">
+                {% endif %}
+                {% for image in images %}
+                    <img src="{{ image.image.url }}" class="img-thumbnail flex-shrink-0" style="width: 80px; height: 80px; object-fit: cover; cursor: pointer;"
+                         data-bs-target="#productCarousel" data-bs-slide-to="{% if product.image %}{{ forloop.counter }}{% else %}{{ forloop.counter0 }}{% endif %}" alt="{{ product.name }}">
+                {% endfor %}
+            </div>
+            {% endif %}
         </div>
 
-        <!-- Product Info -->
+        <!-- Product Info + Key facts -->
         <div class="col-md-6">
             <h1 class="fw-bold">{{ product.name }}</h1>
-            <h3 class="text-primary my-3">{{ product.price }} KES</h3>
-            
-            <p class="lead">{{ product.description }}</p>
-            
-            <hr>
-            
-            {% if product.dimensions %}
-            <p><strong>Dimensions:</strong> {{ product.dimensions }}</p>
-            {% endif %}
-            
-            <p><strong>Category:</strong> {{ product.category.name }}</p>
-            
-            <div class="mt-4">
-               <!-- <a href="{{ whatsapp_url }}" class="btn btn-success btn-lg" target="_blank">Contact to Order</a>-->
-                <a href="{% url 'store' %}" class="btn btn-outline-secondary btn-lg ms-2">Back to Store</a>
-                
-                <!-- Add to Cart Button (replaces wishlist) -->
-                <div class="mt-3">
-                    <button id="add-to-cart-btn" class="btn btn-primary" data-product-id="{{ product.id }}" data-url="/add-to-cart/{{ product.id }}/">
-                        <i class="fa fa-shopping-cart"></i>
-                        <span id="add-to-cart-text"> Add to Cart</span>
-                    </button>
+            <h3 class="text-primary my-3">Ksh {{ product.price }}</h3>
+
+            <!-- Key facts block -->
+            <div class="border rounded p-3 mb-3 bg-white">
+                <h5 class="fw-semibold mb-3">Key details</h5>
+                <ul class="list-unstyled mb-0">
+                    {% if product.dimensions %}
+                    <li><strong>Size:</strong> {{ product.dimensions }}</li>
+                    {% endif %}
+                    <li><strong>Material:</strong> {{ product.category.name }}</li>
+                    <li><strong>Origin:</strong> Kenya (local sourcing)</li>
+                    <li><strong>Lead time:</strong> 3–5 business days for delivery within Nairobi</li>
+                    <li><strong>Installation:</strong> Professional installation available on request</li>
+                </ul>
+            </div>
+
+            <!-- Delivery & installation reassurance -->
+            <div class="border rounded p-3 mb-3 bg-light">
+                <div class="d-flex align-items-start">
+                    <i class="bi bi-truck me-2 text-success"></i>
+                    <div>
+                        <h6 class="fw-semibold mb-1">Delivery & installation</h6>
+                        <p class="mb-1 small text-muted">Nairobi deliveries within 3–5 working days. Upcountry delivery available on request.</p>
+                        <p class="mb-0 small text-muted">Our team can arrange professional installation and on-site measurements for a perfect fit.</p>
+                    </div>
                 </div>
+            </div>
+
+            <p class="lead">{{ product.description }}</p>
+
+            <!-- Primary CTAs -->
+            <div class="d-flex flex-wrap gap-2 mt-4">
+                <button id="add-to-cart-btn" class="btn btn-primary"
+                        data-product-id="{{ product.id }}"
+                        data-url="{% url 'add_to_cart' product.id %}">
+                    <i class="bi bi-cart-plus"></i>
+                    <span id="add-to-cart-text"> Add to Cart</span>
+                </button>
+
+                <button id="toggle-wishlist-btn"
+                        class="btn btn-outline-danger"
+                        data-product-id="{{ product.id }}"
+                        data-url="{% url 'toggle_wishlist' product.id %}">
+                    <i class="bi bi-heart"></i>
+                    <span id="wishlist-btn-text"> Add to Wishlist</span>
+                </button>
+
+                <a href="{{ whatsapp_url }}" class="btn btn-success" target="_blank" rel="noopener">
+                    <i class="bi bi-whatsapp"></i> Ask on WhatsApp
+                </a>
+
+                <a href="{% url 'store' %}" class="btn btn-outline-secondary ms-auto">
+                    Back to Store
+                </a>
             </div>
         </div>
     </div>
+
+    <!-- Similar products -->
+    {% if similar_products %}
+    <div class="mt-5">
+        <h3 class="fw-bold mb-3">Similar products</h3>
+        <div class="row">
+            {% for item in similar_products %}
+            <div class="col-6 col-md-3 mb-4">
+                <a href="{% url 'product_detail' item.id %}" class="text-decoration-none text-dark">
+                    <div class="card h-100">
+                        {% if item.image %}
+                        <img src="{{ item.image.url }}" class="card-img-top" alt="{{ item.name }}" style="height: 160px; object-fit: cover;">
+                        {% endif %}
+                        <div class="card-body">
+                            <h6 class="card-title mb-1">{{ item.name }}</h6>
+                            <div class="fw-semibold">Ksh {{ item.price }}</div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Frequently bought together -->
+    {% if frequently_bought_together %}
+    <div class="mt-4">
+        <h3 class="fw-bold mb-3">Frequently bought together</h3>
+        <div class="row">
+            {% for item in frequently_bought_together %}
+            <div class="col-6 col-md-4 mb-4">
+                <a href="{% url 'product_detail' item.id %}" class="text-decoration-none text-dark">
+                    <div class="card h-100 border-0">
+                        <div class="row g-2 align-items-center">
+                            {% if item.image %}
+                            <div class="col-4">
+                                <img src="{{ item.image.url }}" class="img-fluid rounded" alt="{{ item.name }}" style="height: 80px; object-fit: cover; width: 100%;">
+                            </div>
+                            {% endif %}
+                            <div class="col-8">
+                                <div class="fw-semibold small mb-1">{{ item.name }}</div>
+                                <div class="text-muted small">Ksh {{ item.price }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
 </div>
 {% endblock %}
 
@@ -73,6 +166,8 @@
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const btn = document.getElementById('add-to-cart-btn');
+    const wishlistBtn = document.getElementById('toggle-wishlist-btn');
+
     if (btn) {
         btn.addEventListener('click', function(event) {
             event.preventDefault();
@@ -101,7 +196,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 const cartBadge = document.getElementById('cart-badge');
                 if (cartBadge && typeof data.cart_count !== 'undefined') {
                     cartBadge.textContent = data.cart_count;
-                    cartBadge.style.display = data.cart_count > 0 ? 'inline-block' : 'none';
                 }
 
                 // Update the button's appearance and text to indicate success
@@ -122,6 +216,49 @@ document.addEventListener('DOMContentLoaded', function() {
                 const text = this.querySelector('#add-to-cart-text');
                 if (text) text.textContent = ' Error adding to cart';
             });
+        });
+    }
+
+    if (wishlistBtn) {
+        wishlistBtn.addEventListener('click', function(event) {
+            event.preventDefault();
+            const url = this.dataset.url;
+            const csrftokenMeta = document.querySelector('meta[name="csrf-token"], meta[name="csrfmiddlewaretoken"]');
+            const csrftoken = (csrftokenMeta && csrftokenMeta.getAttribute('content')) || null;
+
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': csrftoken,
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                credentials: 'same-origin'
+            })
+            .then(response => response.json())
+            .then(data => {
+                const wishlistBadge = document.getElementById('wishlist-badge');
+                if (wishlistBadge && typeof data.count !== 'undefined') {
+                    wishlistBadge.textContent = data.count;
+                }
+
+                const icon = this.querySelector('i');
+                const text = this.querySelector('#wishlist-btn-text');
+                if (data.added) {
+                    if (icon) {
+                        icon.classList.remove('bi-heart');
+                        icon.classList.add('bi-heart-fill');
+                    }
+                    if (text) text.textContent = ' In Wishlist';
+                } else {
+                    if (icon) {
+                        icon.classList.remove('bi-heart-fill');
+                        icon.classList.add('bi-heart');
+                    }
+                    if (text) text.textContent = ' Add to Wishlist';
+                }
+            })
+            .catch(error => console.error('Wishlist toggle error:', error));
         });
     }
 });

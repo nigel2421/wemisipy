@@ -27,6 +27,7 @@ INSTALLED_APPS = [
     'django.contrib.sitemaps', # Added for sitemap generation
     'store',  # Your app
     'django_ckeditor_5', # The rich text editor
+    'django_extensions', # Added for runserver_plus
 ]
 
 MIDDLEWARE = [
@@ -209,6 +210,6 @@ CKEDITOR_5_CONFIGS = {
     }
 }
 
-SECURE_SSL_REDIRECT = True
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
+# SECURE_SSL_REDIRECT = True
+# SESSION_COOKIE_SECURE = True
+# CSRF_COOKIE_SECURE = True
