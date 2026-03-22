@@ -1,6 +1,23 @@
 # To learn more about how to use Nix to configure your environment
 # see: https://firebase.google.com/docs/studio/customize-workspace
-{ pkgs, ... }: {
+{ pkgs, ... }:
+let
+  django-ckeditor-5 = pkgs.python311Packages.buildPythonPackage rec {
+    pname = "django-ckeditor-5";
+    version = "0.2.8";
+    src = pkgs.fetchFromGitHub {
+      owner = "hvlads";
+      repo = "django-ckeditor-5";
+      rev = "v${version}";
+      sha256 = "blodJ8dB1oM+qS6Wac1GnTc9WZqEI25gXrBJdEoH3vk=";
+    };
+    propagatedBuildInputs = with pkgs.python311Packages; [
+      django
+    ];
+    doCheck = false;
+  };
+in
+{
   # Which nixpkgs channel to use.
   channel = "stable-24.05"; # or "unstable"
 
@@ -14,6 +31,8 @@
     pkgs.python311Packages.pillow
     pkgs.python311Packages.gunicorn
     pkgs.python311Packages.whitenoise
+    django-ckeditor-5
+    pkgs.python311Packages.django-extensions
     # pkgs.nodePackages.nodemon
   ];
 

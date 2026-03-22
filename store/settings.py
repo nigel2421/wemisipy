@@ -213,3 +213,5 @@ CKEDITOR_5_CONFIGS = {
 # SECURE_SSL_REDIRECT = True
 # SESSION_COOKIE_SECURE = True
 # CSRF_COOKIE_SECURE = True
+
+CSRF_TRUSTED_ORIGINS = ['https://8000-firebase-wemisipygit-1769066323823.cluster-cbeiita7rbe7iuwhvjs5zww2i4.cloudworkstations.dev']

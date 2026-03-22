@@ -1,0 +1,85 @@
+/* General Styles */
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f8f9fa;
+}
+
+/* Navbar improvements */
+.navbar {
+    padding: 1rem 0;
+    transition: all 0.3s ease-in-out;
+}
+
+.navbar-brand {
+    font-weight: 800;
+    font-size: 28px;
+    letter-spacing: -0.5px;
+}
+
+.search-form {
+    display: flex;
+    flex-grow: 1;
+    margin: 0 2rem;
+    max-width: 600px;
+}
+
+.search-form .form-control {
+    border-radius: 20px;
+    padding: 0.5rem 1rem;
+}
+
+/* Align "Featured Products" and "View All" */
+.featured-products-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 2rem 0 1.5rem;
+}
+
+.featured-products-header h2 {
+    margin: 0;
+}
+
+/* Mobile-first menu */
+.mobile-nav-toggle {
+    display: none;
+    border: none;
+    background: none;
+    font-size: 24px;
+}
+
+@media (max-width: 992px) {
+    .navbar-collapse {
+        display: none !important; /* Hide original collapse */
+    }
+    .mobile-nav-toggle {
+        display: block;
+    }
+    .search-form {
+        display: none;
+    }
+}
+
+/* Slide-in Menu */
+.slide-in-menu {
+    position: fixed;
+    top: 0;
+    right: -300px;
+    width: 300px;
+    height: 100%;
+    background: white;
+    box-shadow: -5px 0 15px rgba(0,0,0,0.1);
+    transition: right 0.3s ease-in-out;
+    z-index: 1050;
+    padding: 1rem;
+}
+
+.slide-in-menu.open {
+    right: 0;
+}
+
+.slide-in-menu .nav-link {
+    padding: 0.75rem 0;
+    font-size: 1.1rem;
+    color: #333;
+}
