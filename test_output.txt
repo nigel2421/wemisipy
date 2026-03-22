@@ -1,0 +1,99 @@
+Creating test database for alias 'default' ('file:memorydb_default?mode=memory&cache=shared')...
+
+Found 11 test(s).
+Operations to perform:
+  Synchronize unmigrated apps: django_ckeditor_5, django_extensions, messages, sitemaps, staticfiles
+  Apply all migrations: admin, auth, contenttypes, sessions, store
+Synchronizing apps without migrations:
+  Creating tables...
+    Running deferred SQL...
+Running migrations:
+  Applying contenttypes.0001_initial... OK
+  Applying auth.0001_initial... OK
+  Applying admin.0001_initial... OK
+  Applying admin.0002_logentry_remove_auto_add... OK
+  Applying admin.0003_logentry_add_action_flag_choices... OK
+  Applying contenttypes.0002_remove_content_type_name... OK
+  Applying auth.0002_alter_permission_name_max_length... OK
+  Applying auth.0003_alter_user_email_max_length... OK
+  Applying auth.0004_alter_user_username_opts... OK
+  Applying auth.0005_alter_user_last_login_null... OK
+  Applying auth.0006_require_contenttypes_0002... OK
+  Applying auth.0007_alter_validators_add_error_messages... OK
+  Applying auth.0008_alter_user_username_max_length... OK
+  Applying auth.0009_alter_user_last_name_max_length... OK
+  Applying auth.0010_alter_group_name_max_length... OK
+  Applying auth.0011_update_proxy_permissions... OK
+  Applying auth.0012_alter_user_first_name_max_length... OK
+  Applying sessions.0001_initial... OK
+  Applying store.0001_initial... OK
+  Applying store.0002_wishlist... OK
+  Applying store.0003_productimage... OK
+  Applying store.0004_auto_20251123_1200... OK
+  Applying store.0005_blogpost... OK
+  Applying store.0006_alter_blogpost_content... OK
+  Applying store.0007_alter_wishlist_unique_together_wishlist_products_and_more... OK
+  Applying store.0008_alter_blogpost_content... OK
+  Applying store.0009_alter_wishlist_user_order_orderitem... OK
+test_ai_chat_message (tests.AIFunctionalityTests.test_ai_chat_message) ... ok
+test_ai_generate_blog (tests.AIFunctionalityTests.test_ai_generate_blog) ... ok
+test_blog_post_flow (tests.BlogTests.test_blog_post_flow) ... ok
+test_apply_for_job (tests.CareersTests.test_apply_for_job) ... ok
+test_careers_list (tests.CareersTests.test_careers_list) ... ok
+test_job_detail (tests.CareersTests.test_job_detail) ... ok
+test_manifest_json (tests.PWATests.test_manifest_json) ... ok
+test_service_worker (tests.PWATests.test_service_worker) ... ok
+test_add_to_cart (tests.StoreFunctionalityTests.test_add_to_cart) ... ok
+test_checkout_flow (tests.StoreFunctionalityTests.test_checkout_flow) ... ERROR
+test_toggle_wishlist (tests.StoreFunctionalityTests.test_toggle_wishlist) ... ok
+
+======================================================================
+ERROR: test_checkout_flow (tests.StoreFunctionalityTests.test_checkout_flow)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\USER\Music\WEBSITES\wemisipy\store\tests.py", line 31, in test_checkout_flow
+    response = self.client.post(reverse('checkout'), {
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\USER\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\django\test\client.py", line 1153, in post
+    response = super().post(
+               ^^^^^^^^^^^^^
+  File "C:\Users\USER\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\django\test\client.py", line 499, in post
+    return self.generic(
+           ^^^^^^^^^^^^^
+  File "C:\Users\USER\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\django\test\client.py", line 671, in generic
+    return self.request(**r)
+           ^^^^^^^^^^^^^^^^^
+  File "C:\Users\USER\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\django\test\client.py", line 1087, in request
+    self.check_exception(response)
+  File "C:\Users\USER\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\django\test\client.py", line 802, in check_exception
+    raise exc_value
+  File "C:\Users\USER\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\USER\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\USER\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\django\views\decorators\http.py", line 64, in inner
+    return func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\USER\Music\WEBSITES\wemisipy\store\views.py", line 188, in checkout
+    order = Order.objects.create(
+            ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\USER\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\USER\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\django\db\models\query.py", line 661, in create
+    obj = self.model(**kwargs)
+          ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\USER\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\django\db\models\base.py", line 569, in __init__
+    raise TypeError(
+TypeError: Order() got unexpected keyword arguments: 'address', 'email'
+
+----------------------------------------------------------------------
+Ran 11 tests in 7.674s
+
+FAILED (errors=1)
+Destroying test database for alias 'default' ('file:memorydb_default?mode=memory&cache=shared')...
+
+  Applying store.0010_jobopening_jobapplication... OK
+System check identified no issues (0 silenced).

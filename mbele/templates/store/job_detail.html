@@ -1,0 +1,134 @@
+{% extends 'store/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <!-- Job Details -->
+        <div class="col-lg-8 mb-5">
+            <nav aria-label="breadcrumb" class="mb-4">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'careers' %}" class="text-dark">Careers</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">{{ job.title }}</li>
+                </ol>
+            </nav>
+
+            <h1 class="display-4 fw-bold mb-3">{{ job.title }}</h1>
+            <div class="d-flex align-items-center gap-3 mb-5 py-3 border-bottom border-top">
+                <div class="d-flex align-items-center">
+                    <i class="bi bi-geo-alt me-2 text-primary"></i>
+                    <span>{{ job.location }}</span>
+                </div>
+                <div class="vr"></div>
+                <div class="d-flex align-items-center">
+                    <i class="bi bi-briefcase me-2 text-primary"></i>
+                    <span>{{ job.job_type }}</span>
+                </div>
+                <div class="vr"></div>
+                <div class="d-flex align-items-center">
+                    <i class="bi bi-calendar-event me-2 text-primary"></i>
+                    <span>Posted {{ job.created_at|date:"M d, Y" }}</span>
+                </div>
+            </div>
+
+            <div class="job-description mb-5">
+                <h3 class="fw-bold mb-4">Description</h3>
+                {{ job.description|safe }}
+            </div>
+
+            <div class="job-requirements mb-5">
+                <h3 class="fw-bold mb-4">Requirements</h3>
+                {{ job.requirements|safe }}
+            </div>
+        </div>
+
+        <!-- Application Form Column -->
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-lg sticky-top" style="top: 100px; border-radius: 25px;">
+                <div class="card-body p-4">
+                    <h3 class="fw-bold mb-4">Apply Now</h3>
+                    <form id="job-application-form" action="{% url 'apply_for_job' job.slug %}" method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold">Full Name *</label>
+                            <input type="text" name="full_name" class="form-control bg-light border-0 shadow-none py-2" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold">Email Address *</label>
+                            <input type="email" name="email" class="form-control bg-light border-0 shadow-none py-2" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold">Phone Number *</label>
+                            <input type="tel" name="phone" class="form-control bg-light border-0 shadow-none py-2" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold">Resume/CV (PDF/DOC) *</label>
+                            <input type="file" name="cv" class="form-control bg-light border-0 shadow-none py-2" accept=".pdf,.doc,.docx" required>
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label small fw-bold">Cover Letter (Optional)</label>
+                            <textarea name="cover_letter" class="form-control bg-light border-0 shadow-none py-2" rows="4"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-dark w-100 rounded-pill py-3 fw-bold">Submit Application</button>
+                    </form>
+                    
+                    <div id="application-success" class="mt-4 d-none text-center">
+                        <div class="text-success mb-2">
+                            <i class="bi bi-check-circle-fill display-4"></i>
+                        </div>
+                        <h5 class="fw-bold">Application Sent!</h5>
+                        <p class="text-muted small">Thank you for your interest. Our HR team will review your application and get back to you soon.</p>
+                        <a href="{% url 'careers' %}" class="btn btn-outline-dark btn-sm rounded-pill mt-2">Back to Careers</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('job-application-form');
+    const successDiv = document.getElementById('application-success');
+
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const btn = form.querySelector('button[type="submit"]');
+            const originalText = btn.innerText;
+            btn.disabled = true;
+            btn.innerText = 'Submitting...';
+
+            const formData = new FormData(form);
+
+            fetch(form.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}',
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    form.classList.add('d-none');
+                    successDiv.classList.remove('d-none');
+                } else {
+                    alert('Error: ' + (data.error || 'Something went wrong.'));
+                    btn.disabled = false;
+                    btn.innerText = originalText;
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred. Please try again.');
+                btn.disabled = false;
+                btn.innerText = originalText;
+            });
+        });
+    }
+});
+</script>
+{% endblock %}

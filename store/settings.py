@@ -215,3 +215,11 @@ CKEDITOR_5_CONFIGS = {
 # CSRF_COOKIE_SECURE = True
 
 CSRF_TRUSTED_ORIGINS = ['https://8000-firebase-wemisipygit-1769066323823.cluster-cbeiita7rbe7iuwhvjs5zww2i4.cloudworkstations.dev']
+
+# AI Configuration
+GOOGLE_API_KEY = None # Set this to your Gemini API key from Google AI Studio
+
+# Email Configuration
+ADMIN_EMAIL = 'admin@wemisi.com'
+DEFAULT_FROM_EMAIL = 'noreply@wemisi.com'
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

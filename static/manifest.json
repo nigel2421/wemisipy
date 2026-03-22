@@ -1,0 +1,16 @@
+{
+  "name": "Wemisi Premium Building Materials",
+  "short_name": "Wemisi",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#212529",
+  "description": "High-quality marble, granite, and building materials.",
+  "icons": [
+    {
+      "src": "/static/store/images/icon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

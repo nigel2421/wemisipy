@@ -1,126 +1,304 @@
 {% extends 'store/base.html' %}
+{% load static %}
 
 {% block content %}
-
-<!-- Hero Banner -->
-<div class="p-5 mb-5 rounded-3" style="background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); border: 1px solid #eee;">
-    <div class="container-fluid py-3">
-      <h1 class="display-5 fw-bold text-dark">Wemisi </h1>
-      <p class="col-md-8 fs-4 text-muted">Explore our exclusive collection of Marble, Granite, and Custom Fencing.</p>
-      <a href="{% url 'store' %}" class="btn btn-dark btn-lg px-5 mt-3">Shop Now</a>
-    </div>
-    </div>
-</div>
-
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h2 class="fw-bold">Featured Products</h2>
-    <a href="{% url 'store' %}" class="text-decoration-none text-dark fw-bold">View All &rarr;</a>
-</div>
-
-<!-- Styles for Cards -->
 <style>
-    .product-card { border: 1px solid #eee; border-radius: 8px; background: white; transition: box-shadow 0.3s ease; position: relative; overflow: hidden; }
-    .product-card:hover { box-shadow: 0 10px 20px rgba(0,0,0,0.08); }
-    .img-container { position: relative; height: 250px; background: #f8f9fa; overflow: hidden; }
-    .product-img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s; }
-    .product-card:hover .product-img { transform: scale(1.05); }
+    /* Hero Slider */
+    .hero-slider .carousel-item {
+        height: 80vh;
+        min-height: 500px;
+        background-size: cover;
+        background-position: center;
+        position: relative;
+    }
     
-    /* Badges & Icons */
-    .badge-new { position: absolute; top: 10px; left: 10px; background: #10b981; color: white; font-size: 0.75rem; padding: 4px 10px; border-radius: 20px; z-index: 2; }
-    .action-icons { position: absolute; top: 10px; right: 10px; z-index: 2; display: flex; flex-direction: column; gap: 5px;}
-    .icon-circle { width: 32px; height: 32px; background: rgba(255,255,255,0.9); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #333; transition: 0.2s; }
-    .icon-circle:hover { background: #fff; color: #8224e3; }
+    .hero-slider .carousel-item::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.6));
+    }
 
-    /* Buttons */
-    .btn-visualize { background-color: #8224e3; color: white; border: none; font-weight: 600; flex: 1; margin-right: 5px; }
-    .btn-visualize:hover { background-color: #6e1ec0; color: white; }
-    .btn-add-cart { background-color: #222; color: white; border: none; font-weight: 600; flex: 1; margin-left: 5px; }
-    .btn-add-cart:hover { background-color: #000; color: white; }
+    .hero-content {
+        position: absolute;
+        top: 50%;
+        left: 10%;
+        transform: translateY(-50%);
+        z-index: 10;
+        max-width: 600px;
+        color: white;
+    }
+
+    .hero-glass {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(15px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        padding: 3rem;
+        border-radius: 20px;
+    }
+
+    .hero-content h1 {
+        font-size: 4rem;
+        font-weight: 800;
+        margin-bottom: 1rem;
+        letter-spacing: -2px;
+    }
+
+    .hero-content p {
+        font-size: 1.25rem;
+        margin-bottom: 2rem;
+        opacity: 0.9;
+    }
+
+    /* Tagline Section */
+    .mission-section {
+        padding: 6rem 0;
+        text-align: center;
+        background: #fff;
+    }
+
+    .tagline {
+        font-size: 2.5rem;
+        font-weight: 700;
+        max-width: 900px;
+        margin: 0 auto;
+        line-height: 1.2;
+        color: #111;
+        letter-spacing: -1px;
+    }
+
+    /* Product Cards */
+    .section-title {
+        font-size: 2rem;
+        font-weight: 700;
+        margin-bottom: 3rem;
+    }
+
+    .product-card {
+        border: none;
+        background: transparent;
+        transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .product-card:hover {
+        transform: translateY(-10px);
+    }
+
+    .img-wrapper {
+        position: relative;
+        border-radius: 15px;
+        overflow: hidden;
+        height: 350px;
+        background: #f1f1f1;
+    }
+
+    .product-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .card-actions {
+        position: absolute;
+        bottom: 20px;
+        left: 20px;
+        right: 20px;
+        opacity: 0;
+        transform: translateY(20px);
+        transition: 0.3s;
+    }
+
+    .product-card:hover .card-actions {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    /* Testimonials */
+    .testimonial-card {
+        background: #fff;
+        border: 1px solid #eee;
+        border-radius: 15px;
+        padding: 2rem;
+        height: 100%;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+    }
+
+    .quote-icon {
+        color: var(--accent-color);
+        font-size: 2rem;
+        margin-bottom: 1rem;
+    }
+
+    .testimonial-text {
+        font-size: 1.1rem;
+        font-style: italic;
+        margin-bottom: 1.5rem;
+        color: #555;
+    }
 </style>
 
-<div class="row">
-    {% for product in products %}
-    <div class="col-md-6 col-lg-3 mb-4">
-        <div class="product-card h-100">
-            <div class="img-container">
-                <!-- Badge -->
-                <span class="badge-new">Trending</span>
-                
-                <!-- WISHLIST / SHARE ICONS -->
-                <div class="action-icons">
-                    <!--<div class="icon-circle"><i class="bi bi-share"></i></div>
-                    <div class="icon-circle"><i class="bi bi-heart"></i></div>-->
-                </div>
+<!-- Hero Slider -->
+<div id="heroCarousel" class="carousel slide hero-slider" data-bs-ride="carousel">
+    <!-- Indicators -->
+    <div class="carousel-indicators">
+        <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+        <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+        <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+    </div>
 
-                {% if product.image %}
-                <a href="{% url 'product_detail' product.id %}">
-                    <img src="{{ product.image.url }}" class="product-img" alt="{{ product.name }}">
-                </a>
-                {% else %}
-                <div class="d-flex align-items-center justify-content-center h-100 bg-light text-muted">No Image</div>
-                {% endif %}
+    <div class="carousel-inner">
+        <div class="carousel-item active" style="background-image: url('/media/hero/hero1.png');" data-bs-interval="5000">
+            <div class="hero-content">
+                <div class="hero-glass">
+                    <h1>Wemisi.</h1>
+                    <p>Elevating constructions with premium-grade marble and granite.</p>
+                    <a href="{% url 'store' %}" class="btn btn-light btn-lg rounded-pill px-4">Explore Collection</a>
+                </div>
             </div>
-            
-            <div class="card-body d-flex flex-column p-3">
-                <a href="{% url 'product_detail' product.id %}" class="text-decoration-none text-dark fw-bold mb-1">{{ product.name }}</a>
-                <div class="text-dark fw-bold mb-3">Ksh {{ product.price }}</div>
-                
-                <div class="mt-auto d-flex">
-                    <!--<button class="btn btn-visualize btn-sm"><i class="bi bi-stars"></i> Visualize</button>-->
-                    <!-- Add to Cart button with data attribute -->
-                    <button class="btn btn-add-cart btn-sm" data-product-id="{{ product.id }}">
-                        <i class="bi bi-plus-lg"></i> Add
-                    </button>
+        </div>
+        <div class="carousel-item" style="background-image: url('/media/hero/hero2.png');" data-bs-interval="5000">
+            <div class="hero-content">
+                <div class="hero-glass">
+                    <h1>Strength.</h1>
+                    <p>Durable building materials for the modern visionary architect.</p>
+                    <a href="{% url 'store' %}" class="btn btn-light btn-lg rounded-pill px-4">Our Store</a>
+                </div>
+            </div>
+        </div>
+        <div class="carousel-item" style="background-image: url('/media/hero/hero3.png');" data-bs-interval="5000">
+            <div class="hero-content">
+                <div class="hero-glass">
+                    <h1>Design.</h1>
+                    <p>Custom fencing solutions that define your property with elegance.</p>
+                    <a href="{% url 'store' %}" class="btn btn-light btn-lg rounded-pill px-4">View All Products</a>
                 </div>
             </div>
         </div>
     </div>
-    {% empty %}
-    <div class="col-12 text-center">
-        <p class="text-muted">No products loaded yet.</p>
-    </div>
-    {% endfor %}
+
+    <!-- Controls -->
+    <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+    </button>
 </div>
 
-<!-- Customer testimonials -->
-<div class="mt-5">
-    <h2 class="fw-bold mb-3">What our customers say</h2>
-    <div id="testimonialsCarousel" class="carousel slide" data-bs-ride="carousel">
-        <div class="carousel-inner">
-            <div class="carousel-item active">
-                <div class="card border-0 shadow-sm">
-                    <div class="card-body">
-                        <p class="mb-2 fst-italic">“Wemisi supplied all our kitchen countertops on time and the finish is beautiful. The team was responsive on WhatsApp throughout.”</p>
-                        <div class="small fw-semibold mb-0">— Sarah, Nairobi homeowner</div>
+<!-- Marquee Partner Slider -->
+<div class="marquee-container">
+    <div class="marquee-content">
+        <span class="marquee-item">Bamburi Cement</span>
+        <span class="marquee-item">Crown Paints</span>
+        <span class="marquee-item">Mombasa Cement</span>
+        <span class="marquee-item">East African Portland</span>
+        <span class="marquee-item">Sika East Africa</span>
+        <span class="marquee-item">National Cement</span>
+        <span class="marquee-item">Bamburi Cement</span>
+        <span class="marquee-item">Crown Paints</span>
+        <span class="marquee-item">Mombasa Cement</span>
+        <span class="marquee-item">East African Portland</span>
+        <span class="marquee-item">Sika East Africa</span>
+        <span class="marquee-item">National Cement</span>
+    </div>
+</div>
+
+<!-- Mission Section -->
+<section class="mission-section">
+    <div class="container text-center">
+        <h2 class="tagline">"Curating Premium High-Quality Materials for Modern Builders & Designers."</h2>
+    </div>
+</section>
+
+<!-- Featured Products Section -->
+<section class="py-5" style="background: #fff;">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-end mb-5">
+            <div>
+                <h2 class="section-title mb-0">Featured Products</h2>
+                <p class="text-muted mt-2">Our latest and most popular items</p>
+            </div>
+            <a href="{% url 'store' %}" class="btn btn-outline-dark rounded-pill px-4 mb-2">View All Store</a>
+        </div>
+
+        <div class="row g-4">
+            {% for product in products %}
+            <div class="col-md-6 col-lg-3">
+                <div class="product-card">
+                    <div class="img-wrapper shadow-sm">
+                        {% if product.image %}
+                        <img src="{{ product.image.url }}" class="product-img" alt="{{ product.name }}">
+                        {% else %}
+                        <div class="d-flex align-items-center justify-content-center h-100 bg-light text-muted">No Image</div>
+                        {% endif %}
+                        <div class="card-actions">
+                            <button class="btn btn-dark w-100 rounded-pill btn-add-cart" data-product-id="{{ product.id }}">
+                                <i class="bi bi-cart-plus me-2"></i> Quick Add
+                            </button>
+                        </div>
+                    </div>
+                    <div class="mt-3">
+                        <h5 class="fw-bold mb-1">{{ product.name }}</h5>
+                        <p class="text-muted small mb-2">{{ product.category.name }}</p>
+                        <p class="fw-700 fs-5 text-dark">Ksh {{ product.price }}</p>
                     </div>
                 </div>
             </div>
-            <div class="carousel-item">
-                <div class="card border-0 shadow-sm">
-                    <div class="card-body">
-                        <p class="mb-2 fst-italic">“Reliable quality and fair pricing for our fencing projects. Delivery and offloading were handled professionally.”</p>
-                        <div class="small fw-semibold mb-0">— James, Contractor</div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Testimonials Section -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <h2 class="section-title text-center mb-5">What our clients say</h2>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="testimonial-card">
+                    <i class="bi bi-quote quote-icon"></i>
+                    <p class="testimonial-text">“Wemisi supplied all our kitchen countertops on time and the finish is beautiful. Highly recommended!”</p>
+                    <div class="d-flex align-items-center">
+                        <div class="bg-dark text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">S</div>
+                        <div class="small">
+                            <div class="fw-bold">Sarah M.</div>
+                            <div class="text-muted">Nairobi Homeowner</div>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="carousel-item">
-                <div class="card border-0 shadow-sm">
-                    <div class="card-body">
-                        <p class="mb-2 fst-italic">“Great experience end-to-end. The team helped us choose the right marble and organized installation for our showroom.”</p>
-                        <div class="small fw-semibold mb-0">— Amina, Interior designer</div>
+            <div class="col-md-4">
+                <div class="testimonial-card">
+                    <i class="bi bi-quote quote-icon"></i>
+                    <p class="testimonial-text">“Reliable quality and fair pricing for our fencing projects. Professional delivery and support.”</p>
+                    <div class="d-flex align-items-center">
+                        <div class="bg-dark text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">J</div>
+                        <div class="small">
+                            <div class="fw-bold">James O.</div>
+                            <div class="text-muted">Project Contractor</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="testimonial-card">
+                    <i class="bi bi-quote quote-icon"></i>
+                    <p class="testimonial-text">“Great experience end-to-end. The team helped us choose the right marble for our showroom.”</p>
+                    <div class="d-flex align-items-center">
+                        <div class="bg-dark text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">A</div>
+                        <div class="small">
+                            <div class="fw-bold">Amina K.</div>
+                            <div class="text-muted">Interior Designer</div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-        <button class="carousel-control-prev" type="button" data-bs-target="#testimonialsCarousel" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Previous</span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#testimonialsCarousel" data-bs-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Next</span>
-        </button>
     </div>
-</div>
-
+</section>
 {% endblock %}

@@ -55,17 +55,40 @@
             </table>
         </div>
 
-        <div class="d-flex justify-content-between align-items-center mt-4 p-4 bg-light border rounded">
-            <h3 class="fw-bold">Total: <span id="cart-total-amount">Ksh {{ total_price }}</span></h3>
-            
-            <div>
-                <a href="{% url 'clear_cart' %}" class="btn btn-outline-danger me-2">Clear Cart</a>
-                
-                <!-- WHATSAPP CHECKOUT BUTTON -->
-                <a href="{{ whatsapp_url }}" target="_blank" class="btn btn-success btn-lg">
-                    <i class="bi bi-whatsapp"></i> Checkout on WhatsApp
-                </a>
-            </div>
+        <!-- Delivery & Contact Information Form -->
+        <div class="mt-4 p-4 border rounded bg-white shadow-sm">
+            <h4 class="fw-bold mb-4">Delivery & Contact Information</h4>
+            <form action="{% url 'checkout' %}" method="POST" id="checkout-form">
+                {% csrf_token %}
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label for="full_name" class="form-label fw-semibold">Full Name</label>
+                        <input type="text" class="form-control" id="full_name" name="full_name" required placeholder="Enter your full name">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="phone_number" class="form-label fw-semibold">Phone Number</label>
+                        <input type="tel" class="form-control" id="phone_number" name="phone_number" required placeholder="e.g. 0712345678">
+                    </div>
+                    <div class="col-12">
+                        <label for="address" class="form-label fw-semibold">Delivery Address</label>
+                        <textarea class="form-control" id="address" name="address" rows="3" required placeholder="Enter detailed delivery address or location"></textarea>
+                    </div>
+                    <div class="col-12">
+                        <label for="email" class="form-label fw-semibold">Email (Optional)</label>
+                        <input type="email" class="form-control" id="email" name="email" placeholder="you@example.com">
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center mt-5 p-4 bg-light border-top rounded-bottom mx-n4 mb-n4">
+                    <h3 class="fw-bold mb-0">Total: <span id="cart-total-amount">Ksh {{ total_price }}</span></h3>
+                    <div>
+                        <a href="{% url 'clear_cart' %}" class="btn btn-outline-danger me-2">Clear Cart</a>
+                        <button type="submit" class="btn btn-success btn-lg px-5">
+                            <i class="bi bi-whatsapp"></i> Checkout on WhatsApp
+                        </button>
+                    </div>
+                </div>
+            </form>
         </div>
 
         <!-- Delivery & installation info -->

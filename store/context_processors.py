@@ -32,11 +32,30 @@ def cart_and_wishlist_count(request):
       - cart_count: total items in the cart
       - wishlist_count: total items in the wishlist
     """
-    cart = request.session.get("cart", {})
-    wishlist = request.session.get("wishlist", [])
+    from .models import Cart, Wishlist
+    
+    cart_count = 0
+    wishlist_count = 0
+    
+    if request.user.is_authenticated:
+        # Get count from database
+        cart = Cart.objects.filter(user=request.user).first()
+        if cart:
+            cart_count = sum(item.quantity for item in cart.items.all())
+        
+        wishlist = Wishlist.objects.filter(user=request.user).first()
+        if wishlist:
+            wishlist_count = wishlist.products.count()
+    else:
+        # Fall back to session for guest users
+        cart = request.session.get("cart", {})
+        cart_count = sum(cart.values())
+        
+        wishlist = request.session.get("wishlist", [])
+        wishlist_count = len(wishlist)
 
     return {
         "menu_categories": Category.objects.all(),
-        "cart_count": sum(cart.values()),
-        "wishlist_count": len(wishlist),
+        "cart_count": cart_count,
+        "wishlist_count": wishlist_count,
     }

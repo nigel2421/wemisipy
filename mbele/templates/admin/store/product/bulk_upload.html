@@ -1,0 +1,32 @@
+{% extends "admin/base_site.html" %}
+{% load i18n admin_urls static admin_modify %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+<a href="{% url 'admin:index' %}">{% translate 'Home' %}</a>
+&rsaquo; <a href="{% url 'admin:app_list' app_label='store' %}">Store</a>
+&rsaquo; <a href="{% url 'admin:store_product_changelist' %}">Products</a>
+&rsaquo; <a href="{% url 'admin:store_product_change' product.pk %}">{{ product.name }}</a>
+&rsaquo; Bulk Upload Images
+</div>
+{% endblock %}
+
+{% block content %}
+<div id="content-main">
+    <h1>Bulk Upload Images for {{ product.name }}</h1>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="module">
+            <div class="form-row">
+                <label for="id_images">Select Images:</label>
+                <input type="file" name="images" id="id_images" multiple accept="image/*" required>
+                <p class="help">You can select multiple files at once.</p>
+            </div>
+        </div>
+        <div class="submit-row">
+            <input type="submit" value="Upload" class="default">
+            <a href="{% url 'admin:store_product_change' product.pk %}" class="closelink">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

@@ -1,17 +1,51 @@
 {% extends 'store/base.html' %}
+{% load static %}
 
 {% block content %}
-<div class="container my-5">
-    <div class="row justify-content-center">
-        <div class="col-lg-8 text-center">
-            <h1 class="fw-bold text-dark mb-3">Careers at WEMISI</h1>
-            <hr class="w-25 mx-auto mb-4">
-            <p class="lead text-muted">
-                We are always looking for talented individuals to join our team.
-            </p>
-            <p class="fs-5 mt-4">Currently, there are no open positions available. However, if you believe you have what it takes to contribute to our success, we would love to hear from you.</p>
-            <p class="fs-5">Please send a copy of your CV and portfolio to <a href="mailto:info@wemisi.com" class="fw-bold text-decoration-none">info@wemisi.com</a>.</p>
+<!-- Career Hero -->
+<section class="py-5 bg-dark text-white text-center" style="background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=1600') center/cover;">
+    <div class="container py-5">
+        <h1 class="display-3 fw-bold mb-3">Join Our Expert Team</h1>
+        <p class="lead mb-0 mx-auto" style="max-width: 700px;">Help us build the future with premium stone and architectural materials.</p>
+    </div>
+</section>
+
+<div class="container py-5">
+    <div class="row mb-5">
+        <div class="col-lg-8 mx-auto text-center">
+            <h2 class="fw-bold mb-4">Open Positions</h2>
+            <p class="text-muted">We're always looking for talented individuals to join our team in Nairobi. Browse our current openings below.</p>
         </div>
+    </div>
+
+    <div class="row g-4">
+        {% if jobs %}
+            {% for job in jobs %}
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 border-0 shadow-sm hover-lift" style="border-radius: 20px; overflow: hidden;">
+                    <div class="card-body p-4">
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <span class="badge bg-light text-dark rounded-pill px-3">{{ job.job_type }}</span>
+                            <small class="text-muted"><i class="bi bi-geo-alt me-1"></i>{{ job.location }}</small>
+                        </div>
+                        <h4 class="card-title fw-bold mb-3">{{ job.title }}</h4>
+                        <div class="text-muted small mb-4">
+                            Posted on {{ job.created_at|date:"M d, Y" }}
+                        </div>
+                        <a href="{% url 'job_detail' job.slug %}" class="btn btn-dark w-100 rounded-pill py-2">View Details & Apply</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="col-12 text-center py-5">
+                <div class="mb-4">
+                    <i class="bi bi-briefcase text-muted display-1"></i>
+                </div>
+                <h3>No open positions at the moment</h3>
+                <p class="text-muted">Please check back later or send us a general inquiry.</p>
+            </div>
+        {% endif %}
     </div>
 </div>
 {% endblock %}
