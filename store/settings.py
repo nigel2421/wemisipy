@@ -24,6 +24,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.humanize',
     'django.contrib.sitemaps', # Added for sitemap generation
     'store',  # Your app
     'django_ckeditor_5', # The rich text editor

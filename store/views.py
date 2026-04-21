@@ -10,6 +10,7 @@ import json
 import uuid
 from django.core.mail import send_mail
 from django.conf import settings
+from .ai_utils import get_recommendations
 
 # --- EXISTING VIEWS ---
 
@@ -55,15 +56,10 @@ def product_detail(request, id):
     product = get_object_or_404(Product, id=id)
     images = ProductImage.objects.filter(product=product)
 
-    # Simple "similar products" and "frequently bought together" suggestions
-    similar_products = (
-        Product.objects.filter(available=True, category=product.category)
-        .exclude(id=product.id)[:4]
-    )
-    frequently_bought_together = (
-        Product.objects.filter(available=True, category=product.category)
-        .exclude(id__in=[product.id])[:3]
-    )
+    # Fetch AI Recommendations
+    recommendations = get_recommendations(product)
+    # Fetch Related Products (Category-based fallback/standard)
+    related_products = Product.objects.filter(available=True, category=product.category).exclude(id=product.id)[:4]
 
     # WhatsApp CTA link for this specific product
     phone_number = "+254721202052"
@@ -80,8 +76,8 @@ def product_detail(request, id):
     context = {
         "product": product,
         "images": images,
-        "similar_products": similar_products,
-        "frequently_bought_together": frequently_bought_together,
+        "recommendations": recommendations,
+        "related_products": related_products,
         "whatsapp_url": whatsapp_url,
     }
     return render(request, "store/product_detail.html", context)
@@ -230,7 +226,36 @@ def checkout(request):
     message += f"Order ID: {order.order_id}"
     
     whatsapp_url = f"https://wa.me/{phone_number}?text={urllib.parse.quote(message)}"
-    return redirect(whatsapp_url)
+    # Redirect to success page instead of directly to WhatsApp
+    return redirect('checkout_success', order_id=order.order_id)
+
+def checkout_success(request, order_id):
+    """
+    Displays an order success message and provides a button to confirm on WhatsApp.
+    """
+    order = get_object_or_404(Order, order_id=order_id)
+    
+    # Prepare WhatsApp message again (or pass it from checkout if preferred, but simpler to recreate)
+    phone_number = "+254721202052"
+    message = f"Hello! I want to confirm my order:\n\n"
+    message += f"Customer: {order.full_name}\n"
+    message += f"Phone: {order.phone_number}\n"
+    message += f"Delivery Address: {order.address}\n\n"
+    message += "Products:\n"
+    
+    for item in order.items.all():
+        message += f"- {item.product.name} (x{item.quantity}) - Ksh {item.price * item.quantity}\n"
+    
+    message += f"\nTotal: Ksh {order.total_price}\n"
+    message += f"\n--------------------------\n"
+    message += f"Order ID: {order.order_id}"
+    
+    whatsapp_url = f"https://wa.me/{phone_number}?text={urllib.parse.quote(message)}"
+    
+    return render(request, 'store/checkout_success.html', {
+        'order': order,
+        'whatsapp_url': whatsapp_url
+    })
 
 
 @require_POST

@@ -1,4 +1,5 @@
 {% extends 'store/base.html' %}
+{% load humanize %}
 
 {% block content %}
 
@@ -47,8 +48,8 @@
                                 <button class="btn btn-outline-secondary btn-qty-plus" type="button">+</button>
                             </div>
                         </td>
-                        <td>Ksh {{ item.product.price }}</td>
-                        <td class="cart-item-total">Ksh {{ item.total }}</td>
+                        <td>Ksh {{ item.product.price|intcomma }}</td>
+                        <td class="cart-item-total">Ksh {{ item.total|intcomma }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -80,7 +81,7 @@
                 </div>
 
                 <div class="d-flex justify-content-between align-items-center mt-5 p-4 bg-light border-top rounded-bottom mx-n4 mb-n4">
-                    <h3 class="fw-bold mb-0">Total: <span id="cart-total-amount">Ksh {{ total_price }}</span></h3>
+                    <h3 class="fw-bold mb-0">Total: <span id="cart-total-amount">Ksh {{ total_price|intcomma }}</span></h3>
                     <div>
                         <a href="{% url 'clear_cart' %}" class="btn btn-outline-danger me-2">Clear Cart</a>
                         <button type="submit" class="btn btn-success btn-lg px-5">

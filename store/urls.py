@@ -28,6 +28,7 @@ urlpatterns = [
     path('cart/update/<int:product_id>/', views.update_cart_item, name='update_cart_item'),
     path('clear-cart/', views.clear_cart, name='clear_cart'),
     path('checkout/', views.checkout, name='checkout'),
+    path('checkout/success/<str:order_id>/', views.checkout_success, name='checkout_success'),
     path('admin/order/<int:order_id>/invoice/', views.download_invoice, name='admin_order_invoice'),
 
     # Wishlist URLs

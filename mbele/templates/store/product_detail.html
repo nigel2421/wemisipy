@@ -1,4 +1,5 @@
 {% extends 'store/base.html' %}
+{% load humanize %}
 
 {% block content %}
 <div class="container">
@@ -50,7 +51,7 @@
         <!-- Product Info + Key facts -->
         <div class="col-md-6">
             <h1 class="fw-bold">{{ product.name }}</h1>
-            <h3 class="text-primary my-3">Ksh {{ product.price }}</h3>
+            <h3 class="text-primary my-3">Ksh {{ product.price|intcomma }}</h3>
 
             <!-- Key facts block -->
             <div class="border rounded p-3 mb-3 bg-white">
@@ -131,7 +132,40 @@
                             </div>
                             {% endif %}
                             <div class="position-absolute top-0 end-0 m-2">
-                                <span class="badge bg-white text-dark shadow-sm">Ksh {{ item.price }}</span>
+                                <span class="badge bg-white text-dark shadow-sm">Ksh {{ item.price|intcomma }}</span>
+                            </div>
+                        </div>
+                        <div class="card-body px-0 pt-3">
+                            <h6 class="card-title fw-semibold mb-1">{{ item.name }}</h6>
+                            <p class="text-muted small mb-0">{{ item.category.name }}</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Related Products (By Category) -->
+    {% if related_products %}
+    <div class="mt-5 pt-5 border-top">
+        <h3 class="fw-bold mb-4">Related Products</h3>
+        <div class="row g-4">
+            {% for item in related_products %}
+            <div class="col-6 col-md-3">
+                <div class="card h-100 border-0 shadow-sm hover-lift">
+                    <a href="{% url 'product_detail' item.id %}" class="text-decoration-none text-dark">
+                        <div class="position-relative">
+                            {% if item.image %}
+                            <img src="{{ item.image.url }}" class="card-img-top rounded-3" alt="{{ item.name }}" style="height: 200px; object-fit: cover;">
+                            {% else %}
+                            <div class="bg-light d-flex align-items-center justify-content-center rounded-3" style="height: 200px;">
+                                <i class="bi bi-image text-muted fs-1"></i>
+                            </div>
+                            {% endif %}
+                            <div class="position-absolute top-0 end-0 m-2">
+                                <span class="badge bg-white text-dark shadow-sm">Ksh {{ item.price|intcomma }}</span>
                             </div>
                         </div>
                         <div class="card-body px-0 pt-3">
