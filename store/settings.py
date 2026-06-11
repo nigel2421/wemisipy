@@ -1,19 +1,28 @@
 import os
 from pathlib import Path
 
+# Load environment variables
+from dotenv import load_dotenv
+load_dotenv()
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
+# Environment detection
+DJANGO_ENV = os.getenv('DJANGO_ENV', 'development')
+IS_PRODUCTION = DJANGO_ENV == 'production'
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-a)z#--o8@^1j^)z0z=0p$l&o9n)w&^gz$w-g&q*k@#!ebd@9=c'
+# Secret key from environment (MUST be set in production!)
+SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'django-insecure-dev-only')
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# Debug mode - ALWAYS False in production
+DEBUG = not IS_PRODUCTION and os.getenv('DEBUG', 'True').lower() == 'true'
 
-ALLOWED_HOSTS = ['www.wemisi.com', '.wemisi.com', '127.0.0.1']
+# Allowed hosts depend on environment
+if IS_PRODUCTION:
+    ALLOWED_HOSTS = ['www.wemisi.com', 'wemisi.com', 'api.wemisi.com']
+else:
+    ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '*.local']
 
 # Application definition
 
@@ -215,12 +224,34 @@ CKEDITOR_5_CONFIGS = {
 # SESSION_COOKIE_SECURE = True
 # CSRF_COOKIE_SECURE = True
 
+# Production security settings
+if IS_PRODUCTION:
+    SECURE_SSL_REDIRECT = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SECURE_HSTS_SECONDS = 31536000
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_BROWSER_XSS_FILTER = True
+    X_FRAME_OPTIONS = 'DENY'
+
 CSRF_TRUSTED_ORIGINS = ['https://8000-firebase-wemisipygit-1769066323823.cluster-cbeiita7rbe7iuwhvjs5zww2i4.cloudworkstations.dev']
 
 # AI Configuration
-GOOGLE_API_KEY = None # Set this to your Gemini API key from Google AI Studio
+GOOGLE_API_KEY = os.getenv('GOOGLE_API_KEY')
 
 # Email Configuration
-ADMIN_EMAIL = 'admin@wemisi.com'
-DEFAULT_FROM_EMAIL = 'noreply@wemisi.com'
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+ADMIN_EMAIL = os.getenv('ADMIN_EMAIL', 'admin@wemisi.com')
+DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', 'noreply@wemisi.com')
+
+# Email backend depends on environment
+if IS_PRODUCTION:
+    # Production: use actual email backend
+    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+    EMAIL_HOST = os.getenv('EMAIL_HOST', 'smtp.gmail.com')
+    EMAIL_PORT = int(os.getenv('EMAIL_PORT', 587))
+    EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS', 'True').lower() == 'true'
+    EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+    EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+else:
+    # Development: log emails to console
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

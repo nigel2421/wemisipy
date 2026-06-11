@@ -38,6 +38,7 @@ class Category(models.Model):
 class Product(models.Model):
     category = models.ForeignKey(Category, related_name='products', on_delete=models.CASCADE)
     name = models.CharField(max_length=200)
+    slug = models.SlugField(max_length=255, null=True, blank=True, help_text="Auto-generated from product name. Used for SEO-friendly URLs.")
     description = models.TextField()
     price = models.DecimalField(max_digits=10, decimal_places=2)
     # Hardware specific fields
@@ -45,9 +46,32 @@ class Product(models.Model):
     image = models.ImageField(upload_to='products/')
     is_featured = models.BooleanField(default=False) # If true, shows on Homepage
     available = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        indexes = [
+            models.Index(fields=['slug']),
+        ]
 
     def __str__(self):
         return self.name
+
+    def get_absolute_url(self):
+        from django.urls import reverse
+        return reverse('product_detail', args=[self.slug])
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            from django.utils.text import slugify
+            base_slug = slugify(self.name)
+            slug = base_slug
+            counter = 1
+            while Product.objects.filter(slug=slug).exclude(id=self.id).exists():
+                slug = f"{base_slug}-{counter}"
+                counter += 1
+            self.slug = slug
+        super().save(*args, **kwargs)
 
 class ProductImage(models.Model):
     product = models.ForeignKey(Product, related_name='images', on_delete=models.CASCADE)

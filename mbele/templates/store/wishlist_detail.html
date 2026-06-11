@@ -9,7 +9,7 @@
             {% for item in wishlist %}
                 <div class="col-md-6 col-lg-4 mb-4">
                     <div class="card h-100">
-                        <a href="{% url 'product_detail' item.product.id %}">
+                        <a href="{% url 'product_detail' item.product.slug %}">
                             <img src="{{ item.product.image.url }}" class="card-img-top" alt="{{ item.product.name }}">
                         </a>
                         <div class="card-body">

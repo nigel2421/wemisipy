@@ -60,8 +60,8 @@ def subcategory_detail(request, category_slug, sub_slug):
         'products': products,
     })
 
-def product_detail(request, id):
-    product = get_object_or_404(Product, id=id)
+def product_detail(request, slug):
+    product = get_object_or_404(Product, slug=slug)
     images = ProductImage.objects.filter(product=product)
 
     # Fetch AI Recommendations
@@ -566,7 +566,7 @@ def search_suggestions(request):
             results.append(
                 {
                     "name": product.name,
-                    "url": reverse("product_detail", args=[product.id]),
+                    "url": reverse("product_detail", args=[product.slug]),
                 }
             )
 

@@ -122,7 +122,7 @@
             {% for item in recommendations %}
             <div class="col-6 col-md-3">
                 <div class="card h-100 border-0 shadow-sm hover-lift">
-                    <a href="{% url 'product_detail' item.id %}" class="text-decoration-none text-dark">
+                    <a href="{% url 'product_detail' item.slug %}" class="text-decoration-none text-dark">
                         <div class="position-relative">
                             {% if item.image %}
                             <img src="{{ item.image.url }}" class="card-img-top rounded-3" alt="{{ item.name }}" style="height: 200px; object-fit: cover;">
@@ -155,7 +155,7 @@
             {% for item in related_products %}
             <div class="col-6 col-md-3">
                 <div class="card h-100 border-0 shadow-sm hover-lift">
-                    <a href="{% url 'product_detail' item.id %}" class="text-decoration-none text-dark">
+                    <a href="{% url 'product_detail' item.slug %}" class="text-decoration-none text-dark">
                         <div class="position-relative">
                             {% if item.image %}
                             <img src="{{ item.image.url }}" class="card-img-top rounded-3" alt="{{ item.name }}" style="height: 200px; object-fit: cover;">

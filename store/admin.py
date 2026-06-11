@@ -43,22 +43,6 @@ class CategoryAdmin(admin.ModelAdmin):
     def get_queryset(self, request):
         return super().get_queryset(request).prefetch_related('subcategories')
 
-# ── Product Image Inline (with ordering) ───────────────────────────────────
-class ProductImageInline(admin.TabularInline):
-    model = ProductImage
-    extra = 1
-    fields = ('image', 'order', 'image_preview')
-    readonly_fields = ('image_preview',)
-
-    def image_preview(self, obj):
-        if obj.image:
-            return format_html(
-                '<img src="{}" style="height:60px;border-radius:4px;object-fit:cover;" />',
-                obj.image.url
-            )
-        return "—"
-    image_preview.short_description = 'Preview'
-
 # ── Product Admin ───────────────────────────────────────────────────────────
 class ProductAdminForm(forms.ModelForm):
     class Meta:
@@ -87,10 +71,7 @@ class ProductAdmin(admin.ModelAdmin):
     list_editable = ['price', 'available']
     list_filter = ('category', 'available', 'is_featured')
     search_fields = ('name', 'description')
-    inlines = [ProductImageInline]
-
-    class Media:
-        js = ('store/js/product_image_inline.js',)
+    inlines = []
 
     def get_urls(self):
         urls = super().get_urls()
