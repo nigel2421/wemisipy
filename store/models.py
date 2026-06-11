@@ -6,13 +6,34 @@ from django_ckeditor_5.fields import CKEditor5Field
 
 class Category(models.Model):
     name = models.CharField(max_length=200)
-    slug = models.SlugField(unique=True) # This makes the URL look nice (e.g., /granite/)
+    slug = models.SlugField(unique=True)  # e.g. /granite/
+    parent = models.ForeignKey(
+        'self',
+        null=True,
+        blank=True,
+        related_name='subcategories',
+        on_delete=models.CASCADE,
+        help_text="Leave blank for top-level categories. Select a parent to make this a subcategory."
+    )
+    order = models.PositiveIntegerField(
+        default=0,
+        help_text="Controls display order in the navigation menu (lower = first)."
+    )
 
     class Meta:
         verbose_name_plural = "Categories"
+        ordering = ['order', 'name']
 
     def __str__(self):
+        if self.parent:
+            return f"{self.parent.name} → {self.name}"
         return self.name
+
+    def get_absolute_url(self):
+        from django.urls import reverse
+        if self.parent:
+            return reverse('subcategory_detail', args=[self.parent.slug, self.slug])
+        return reverse('category_detail', args=[self.slug])
 
 class Product(models.Model):
     category = models.ForeignKey(Category, related_name='products', on_delete=models.CASCADE)
@@ -31,9 +52,13 @@ class Product(models.Model):
 class ProductImage(models.Model):
     product = models.ForeignKey(Product, related_name='images', on_delete=models.CASCADE)
     image = models.ImageField(upload_to='products/')
+    order = models.PositiveIntegerField(default=0, help_text="Display order (lower = first).")
+
+    class Meta:
+        ordering = ['order']
 
     def __str__(self):
-        return f'{self.product.name} Image'
+        return f'{self.product.name} Image #{self.order}'
 
 class Cart(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)

@@ -23,7 +23,7 @@
         :root {
             --primary-color: #000000;
             --accent-color: #8224e3;
-            --glass-bg: rgba(255, 255, 255, 0.7);
+            --glass-bg: rgba(255, 255, 255, 0.85);
             --glass-border: rgba(255, 255, 255, 0.3);
             --font-main: 'Outfit', sans-serif;
         }
@@ -34,11 +34,13 @@
             color: #333;
         }
 
+        /* ── NAVBAR ─────────────────────────────────────── */
         .navbar {
             background: var(--glass-bg);
             backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
             border-bottom: 1px solid var(--glass-border);
-            padding: 1rem 0;
+            padding: 0.75rem 0;
             position: sticky;
             top: 0;
             z-index: 1000;
@@ -54,13 +56,76 @@
         .nav-link {
             font-weight: 500;
             color: #555 !important;
-            transition: color 0.3s;
+            transition: color 0.2s;
+            padding: 0.5rem 0.85rem !important;
         }
 
         .nav-link:hover {
             color: var(--accent-color) !important;
         }
 
+        /* ── CATEGORY DROPDOWN ──────────────────────────── */
+        .cat-dropdown {
+            position: relative;
+        }
+
+        .cat-dropdown > .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .cat-dropdown > .nav-link .caret {
+            font-size: 0.7rem;
+            transition: transform 0.25s;
+            opacity: 0.6;
+        }
+
+        .cat-dropdown:hover > .nav-link .caret,
+        .cat-dropdown.open > .nav-link .caret {
+            transform: rotate(180deg);
+        }
+
+        .cat-submenu {
+            display: none;
+            position: absolute;
+            top: calc(100% + 6px);
+            left: 0;
+            min-width: 200px;
+            background: #fff;
+            border: 1px solid rgba(0,0,0,0.08);
+            border-radius: 10px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+            padding: 6px 0;
+            z-index: 1100;
+            animation: dropDown 0.2s ease;
+        }
+
+        @keyframes dropDown {
+            from { opacity: 0; transform: translateY(-6px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .cat-dropdown:hover .cat-submenu {
+            display: block;
+        }
+
+        .cat-submenu a {
+            display: block;
+            padding: 8px 18px;
+            font-size: 0.9rem;
+            color: #444;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background 0.15s, color 0.15s;
+        }
+
+        .cat-submenu a:hover {
+            background: #f5f0ff;
+            color: var(--accent-color);
+        }
+
+        /* ── BADGES ─────────────────────────────────────── */
         .cart-badge {
             position: absolute;
             top: -5px;
@@ -73,7 +138,104 @@
             font-weight: 700;
         }
 
-        /* Marquee Styles */
+        /* ── MOBILE SLIDE-IN MENU ───────────────────────── */
+        .slide-in-menu {
+            position: fixed;
+            top: 0;
+            left: -320px;
+            width: 300px;
+            height: 100vh;
+            background: #fff;
+            z-index: 2000;
+            box-shadow: 4px 0 20px rgba(0,0,0,0.15);
+            transition: left 0.3s cubic-bezier(0.4,0,0.2,1);
+            overflow-y: auto;
+            padding: 1.25rem;
+        }
+
+        .slide-in-menu.open {
+            left: 0;
+        }
+
+        .mobile-search-form input {
+            border-radius: 8px;
+        }
+
+        /* Mobile nav items */
+        .slide-in-menu .nav-link {
+            padding: 0.6rem 0 !important;
+            border-bottom: 1px solid #f0f0f0;
+            color: #333 !important;
+            font-weight: 600;
+        }
+
+        /* Mobile accordion for subcategories */
+        .mobile-cat-item {
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .mobile-cat-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.6rem 0;
+            cursor: pointer;
+            font-weight: 600;
+            color: #333;
+            text-decoration: none;
+        }
+
+        .mobile-cat-header:hover {
+            color: var(--accent-color);
+        }
+
+        .mobile-cat-toggle {
+            background: none;
+            border: none;
+            padding: 0 4px;
+            color: #aaa;
+            font-size: 0.8rem;
+            transition: transform 0.25s;
+            cursor: pointer;
+        }
+
+        .mobile-cat-toggle.expanded {
+            transform: rotate(180deg);
+        }
+
+        .mobile-subcats {
+            display: none;
+            padding: 0 0 0.5rem 1rem;
+            background: #fafafa;
+            border-radius: 6px;
+            margin-bottom: 4px;
+        }
+
+        .mobile-subcats.open {
+            display: block;
+        }
+
+        .mobile-subcats a {
+            display: block;
+            padding: 6px 0;
+            font-size: 0.88rem;
+            color: #555;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.15s;
+        }
+
+        .mobile-subcats a:hover {
+            color: var(--accent-color);
+        }
+
+        .mobile-nav-icons {
+            display: flex;
+            gap: 1.25rem;
+            margin-top: 1.25rem;
+        }
+
+        /* ── MARQUEE ────────────────────────────────────── */
         .marquee-container {
             overflow: hidden;
             white-space: nowrap;
@@ -100,9 +262,10 @@
 
         @keyframes marquee {
             from { transform: translateX(0); }
-            to { transform: translateX(-50%); }
+            to   { transform: translateX(-50%); }
         }
 
+        /* ── FOOTER ─────────────────────────────────────── */
         .footer {
             background: #000;
             color: #fff;
@@ -125,6 +288,19 @@
         .footer a:hover {
             color: #fff;
         }
+
+        /* Overlay for mobile menu */
+        #menu-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.4);
+            z-index: 1999;
+        }
+
+        #menu-overlay.active {
+            display: block;
+        }
     </style>
 </head>
 <body>
@@ -141,7 +317,7 @@
                 <a class="navbar-brand" href="{% url 'home' %}">WEMISI</a>
                 
                 <div class="d-flex align-items-center d-lg-none">
-                    <button class="mobile-nav-toggle" id="hamburger-menu">
+                    <button class="mobile-nav-toggle" id="hamburger-menu" aria-label="Open menu">
                         <i class="bi bi-list"></i>
                     </button>
                 </div>
@@ -155,6 +331,29 @@
                     <ul class="navbar-nav">
                         <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">Home</a></li>
                         <li class="nav-item"><a class="nav-link" href="{% url 'store' %}">Store</a></li>
+
+                        {# ── Categories dropdown ── #}
+                        {% for cat in menu_categories %}
+                        {% if cat.subcategories.all %}
+                        <li class="nav-item cat-dropdown" id="cat-{{ cat.slug }}">
+                            <a class="nav-link" href="{% url 'category_detail' cat.slug %}">
+                                {{ cat.name }}
+                                <i class="bi bi-chevron-down caret"></i>
+                            </a>
+                            <div class="cat-submenu">
+                                <a href="{% url 'category_detail' cat.slug %}">All {{ cat.name }}</a>
+                                {% for sub in cat.subcategories.all %}
+                                <a href="{% url 'subcategory_detail' cat.slug sub.slug %}">{{ sub.name }}</a>
+                                {% endfor %}
+                            </div>
+                        </li>
+                        {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'category_detail' cat.slug %}">{{ cat.name }}</a>
+                        </li>
+                        {% endif %}
+                        {% endfor %}
+
                         <li class="nav-item"><a class="nav-link" href="{% url 'blog' %}">Blog</a></li>
                         <li class="nav-item"><a class="nav-link" href="{% url 'careers' %}">Careers</a></li>
                     </ul>
@@ -174,19 +373,69 @@
         </nav>
     </header>
 
+    <!-- Overlay (closes mobile menu) -->
+    <div id="menu-overlay"></div>
+
     <!-- Slide-in Menu for Mobile -->
-    <div class="slide-in-menu" id="mobile-menu">
-        <button id="close-menu" class="btn btn-close float-end"></button>
-        <form method="GET" action="{% url 'store' %}" class="mobile-search-form">
+    <div class="slide-in-menu" id="mobile-menu" aria-hidden="true">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <span class="fw-bold fs-5">Menu</span>
+            <button id="close-menu" class="btn btn-sm btn-light" aria-label="Close menu">
+                <i class="bi bi-x-lg"></i>
+            </button>
+        </div>
+
+        <form method="GET" action="{% url 'store' %}" class="mobile-search-form mb-3">
             <input class="form-control" type="search" name="q" autocomplete="off"
                    placeholder="Search..." value="{{ request.GET.q }}">
         </form>
-        <ul class="nav flex-column mt-3">
-            <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">Home</a></li>
-            <li class="nav-item"><a class="nav-link" href="{% url 'store' %}">Store</a></li>
-            <li class="nav-item"><a class="nav-link" href="{% url 'blog' %}">Blog</a></li>
-            <li class="nav-item"><a class="nav-link" href="{% url 'careers' %}">Careers</a></li>
-        </ul>
+
+        <nav>
+            <ul class="nav flex-column">
+                <li class="nav-item mobile-cat-item">
+                    <a class="nav-link" href="{% url 'home' %}">Home</a>
+                </li>
+                <li class="nav-item mobile-cat-item">
+                    <a class="nav-link" href="{% url 'store' %}">Store</a>
+                </li>
+
+                {# ── Mobile categories with accordion ── #}
+                {% for cat in menu_categories %}
+                <li class="mobile-cat-item">
+                    {% if cat.subcategories.all %}
+                    <div style="display:flex;align-items:center;justify-content:space-between;">
+                        <a class="mobile-cat-header" href="{% url 'category_detail' cat.slug %}">
+                            {{ cat.name }}
+                        </a>
+                        <button class="mobile-cat-toggle" 
+                                aria-expanded="false"
+                                aria-controls="mobile-sub-{{ cat.slug }}"
+                                data-target="mobile-sub-{{ cat.slug }}">
+                            <i class="bi bi-chevron-down"></i>
+                        </button>
+                    </div>
+                    <div class="mobile-subcats" id="mobile-sub-{{ cat.slug }}">
+                        <a href="{% url 'category_detail' cat.slug %}">All {{ cat.name }}</a>
+                        {% for sub in cat.subcategories.all %}
+                        <a href="{% url 'subcategory_detail' cat.slug sub.slug %}">{{ sub.name }}</a>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <a class="mobile-cat-header" href="{% url 'category_detail' cat.slug %}">
+                        {{ cat.name }}
+                    </a>
+                    {% endif %}
+                </li>
+                {% endfor %}
+
+                <li class="nav-item mobile-cat-item">
+                    <a class="nav-link" href="{% url 'blog' %}">Blog</a>
+                </li>
+                <li class="nav-item mobile-cat-item">
+                    <a class="nav-link" href="{% url 'careers' %}">Careers</a>
+                </li>
+            </ul>
+        </nav>
 
         <div class="mobile-nav-icons">
             <a href="{% url 'wishlist_detail' %}" class="text-dark position-relative nav-icon">
@@ -231,6 +480,7 @@
     <div id="mini-cart-drawer">
         <!-- Mini-cart content will be loaded here via JavaScript -->
     </div>
+
     <!-- AI Chatbot UI -->
     <div id="ai-chat-wrapper" class="position-fixed bottom-0 end-0 m-4" style="z-index: 2000;">
         <!-- Chat Bubble -->
@@ -283,33 +533,78 @@
             });
         }
     </script>
+
     <script>
+        // ── Toast helper ─────────────────────────────────────────
         function showToast(message) {
             const toastContainer = document.getElementById('toast-container');
             const toast = document.createElement('div');
             toast.className = 'toast-message';
             toast.textContent = message;
             toastContainer.appendChild(toast);
-
-            setTimeout(() => {
-                toast.classList.add('show');
-            }, 10);
-
+            setTimeout(() => toast.classList.add('show'), 10);
             setTimeout(() => {
                 toast.classList.remove('show');
-                setTimeout(() => {
-                    toastContainer.removeChild(toast);
-                }, 300);
+                setTimeout(() => toastContainer.removeChild(toast), 300);
             }, 3000);
         }
 
-        // Mobile menu toggle script
-        document.getElementById('hamburger-menu').addEventListener('click', function() {
-            document.getElementById('mobile-menu').classList.add('open');
+        // ── Mobile menu open / close ──────────────────────────────
+        const hamburger  = document.getElementById('hamburger-menu');
+        const closeBtn   = document.getElementById('close-menu');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const overlay    = document.getElementById('menu-overlay');
+
+        function openMenu() {
+            mobileMenu.classList.add('open');
+            mobileMenu.setAttribute('aria-hidden', 'false');
+            overlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeMenu() {
+            mobileMenu.classList.remove('open');
+            mobileMenu.setAttribute('aria-hidden', 'true');
+            overlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        hamburger.addEventListener('click', openMenu);
+        closeBtn.addEventListener('click', closeMenu);
+        overlay.addEventListener('click', closeMenu);
+
+        // ── Mobile subcategory accordion ──────────────────────────
+        document.querySelectorAll('.mobile-cat-toggle').forEach(btn => {
+            btn.addEventListener('click', function () {
+                const targetId = this.dataset.target;
+                const panel    = document.getElementById(targetId);
+                const isOpen   = panel.classList.contains('open');
+
+                // Close all panels
+                document.querySelectorAll('.mobile-subcats.open').forEach(p => p.classList.remove('open'));
+                document.querySelectorAll('.mobile-cat-toggle.expanded').forEach(b => {
+                    b.classList.remove('expanded');
+                    b.setAttribute('aria-expanded', 'false');
+                });
+
+                // Toggle clicked panel
+                if (!isOpen) {
+                    panel.classList.add('open');
+                    this.classList.add('expanded');
+                    this.setAttribute('aria-expanded', 'true');
+                }
+            });
         });
 
-        document.getElementById('close-menu').addEventListener('click', function() {
-            document.getElementById('mobile-menu').classList.remove('open');
+        // ── Desktop dropdown: keep open on click (touch devices) ──
+        document.querySelectorAll('.cat-dropdown').forEach(item => {
+            item.addEventListener('click', function(e) {
+                // Only toggle if it's a touch event (no hover)
+                if (window.matchMedia('(hover: none)').matches) {
+                    e.preventDefault();
+                    this.classList.toggle('open');
+                }
+            });
         });
     </script>
     {% block extra_js %}{% endblock %}

@@ -1,2 +1,40 @@
+# ──────────────────────────────────────────────
+# NEVER commit these – they live on the server
+# ──────────────────────────────────────────────
+db.sqlite3
+media/
+
+# Environment & secrets
+.env
+*.env
+
+# Python compiled files
+*.pyc
+*.pyo
+__pycache__/
+*.pyd
+
+# Django collected static (rebuilt on server)
+staticfiles/
+
+# Log files
+*.log
+stderr.log
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Editor / OS
+.vscode/
+.idea/
+*.DS_Store
+Thumbs.db
+
+# Nix
 shell.nix
 .nix-shell/
+
+# Test output
+test_output.txt

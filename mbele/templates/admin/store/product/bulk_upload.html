@@ -1,32 +1,437 @@
 {% extends "admin/base_site.html" %}
-{% load i18n admin_urls static admin_modify %}
+{% load static %}
 
-{% block breadcrumbs %}
-<div class="breadcrumbs">
-<a href="{% url 'admin:index' %}">{% translate 'Home' %}</a>
-&rsaquo; <a href="{% url 'admin:app_list' app_label='store' %}">Store</a>
-&rsaquo; <a href="{% url 'admin:store_product_changelist' %}">Products</a>
-&rsaquo; <a href="{% url 'admin:store_product_change' product.pk %}">{{ product.name }}</a>
-&rsaquo; Bulk Upload Images
-</div>
-{% endblock %}
+{% block title %}Upload Images – {{ product.name }}{% endblock %}
 
 {% block content %}
-<div id="content-main">
-    <h1>Bulk Upload Images for {{ product.name }}</h1>
-    <form method="post" enctype="multipart/form-data">
+<style>
+  /* ── Layout ─────────────────────────────────────────── */
+  .upload-wrapper {
+    max-width: 900px;
+  }
+
+  /* ── Drop-zone ──────────────────────────────────────── */
+  #drop-zone {
+    border: 2px dashed #8224e3;
+    border-radius: 12px;
+    padding: 3rem 2rem;
+    text-align: center;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+    background: #faf5ff;
+    margin-bottom: 1.5rem;
+  }
+
+  #drop-zone.drag-over {
+    background: #ede5ff;
+    border-color: #5a10ba;
+  }
+
+  #drop-zone .drop-icon {
+    font-size: 3rem;
+    color: #8224e3;
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+
+  #file-input {
+    display: none;
+  }
+
+  /* ── Preview grid ───────────────────────────────────── */
+  #preview-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 12px;
+    margin-bottom: 1.5rem;
+  }
+
+  .preview-card {
+    position: relative;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 2px solid #e0e0e0;
+    background: #f9f9f9;
+    cursor: grab;
+    transition: box-shadow 0.2s, border-color 0.2s;
+    user-select: none;
+  }
+
+  .preview-card:hover {
+    border-color: #8224e3;
+    box-shadow: 0 4px 12px rgba(130,36,227,0.2);
+  }
+
+  .preview-card.sortable-drag {
+    opacity: 0.5;
+  }
+
+  .preview-card.sortable-ghost {
+    opacity: 0.3;
+    border: 2px dashed #8224e3;
+  }
+
+  .preview-card img {
+    width: 100%;
+    height: 120px;
+    object-fit: cover;
+    display: block;
+  }
+
+  .preview-card .card-label {
+    font-size: 0.7rem;
+    padding: 4px 6px;
+    color: #555;
+    background: #fff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .preview-card .remove-btn {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    background: rgba(0,0,0,0.55);
+    border: none;
+    color: #fff;
+    border-radius: 50%;
+    width: 22px;
+    height: 22px;
+    font-size: 0.65rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+  }
+
+  .preview-card .order-badge {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    background: #8224e3;
+    color: #fff;
+    border-radius: 50%;
+    width: 22px;
+    height: 22px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .drag-hint {
+    font-size: 0.8rem;
+    color: #888;
+    margin-bottom: 1rem;
+  }
+
+  /* ── Existing images ────────────────────────────────── */
+  #existing-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 12px;
+    margin-bottom: 1.5rem;
+  }
+
+  .existing-card {
+    position: relative;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 2px solid #ddd;
+    cursor: grab;
+    transition: box-shadow 0.2s, border-color 0.2s;
+  }
+
+  .existing-card:hover {
+    border-color: #8224e3;
+  }
+
+  .existing-card.sortable-ghost {
+    opacity: 0.3;
+    border: 2px dashed #8224e3;
+  }
+
+  .existing-card img {
+    width: 100%;
+    height: 120px;
+    object-fit: cover;
+    display: block;
+  }
+
+  .existing-card .card-label {
+    font-size: 0.7rem;
+    padding: 4px 6px;
+    background: #fff;
+    color: #555;
+  }
+
+  .existing-card .order-badge {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    background: #555;
+    color: #fff;
+    border-radius: 50%;
+    width: 22px;
+    height: 22px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #save-order-btn {
+    display: none;
+  }
+</style>
+
+<div class="upload-wrapper">
+  <h1>📷 Image Manager – <em>{{ product.name }}</em></h1>
+  <p class="text-muted">Upload multiple images at once, drag to reorder, then save.</p>
+
+  <!-- ── Existing images with drag-to-reorder ───────────────── -->
+  {% if existing_images %}
+  <div class="card mb-4">
+    <div class="card-header fw-bold">
+      Current Images
+      <span class="text-muted fw-normal" style="font-size:0.85rem;">— drag to change order</span>
+    </div>
+    <div class="card-body">
+      <div id="existing-grid">
+        {% for img in existing_images %}
+        <div class="existing-card" data-id="{{ img.id }}">
+          <span class="order-badge">{{ forloop.counter }}</span>
+          <img src="{{ img.image.url }}" alt="Image {{ forloop.counter }}">
+          <div class="card-label">Image {{ forloop.counter }}</div>
+        </div>
+        {% endfor %}
+      </div>
+      <button id="save-order-btn" class="btn btn-sm btn-success mt-2">
+        💾 Save New Order
+      </button>
+      <span id="order-saved-msg" class="text-success ms-2" style="display:none;">✓ Order saved!</span>
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- ── Upload new images ───────────────────────────────────── -->
+  <div class="card">
+    <div class="card-header fw-bold">Upload New Images</div>
+    <div class="card-body">
+      <div id="drop-zone">
+        <span class="drop-icon">⬆️</span>
+        <strong>Drop images here</strong> or <u>click to select</u>
+        <br><small class="text-muted">JPG, PNG, WebP — select as many as you want</small>
+        <input id="file-input" type="file" multiple accept="image/*">
+      </div>
+
+      <p class="drag-hint" id="drag-hint" style="display:none;">
+        ↕ Drag thumbnails below to set the upload order before saving.
+      </p>
+
+      <div id="preview-grid"></div>
+
+      <form id="upload-form" method="POST" enctype="multipart/form-data"
+            action="{% url 'admin:store_product_bulk_upload' product.pk %}">
         {% csrf_token %}
-        <div class="module">
-            <div class="form-row">
-                <label for="id_images">Select Images:</label>
-                <input type="file" name="images" id="id_images" multiple accept="image/*" required>
-                <p class="help">You can select multiple files at once.</p>
-            </div>
+        <div id="hidden-inputs"></div>
+        <div class="d-flex gap-2 align-items-center flex-wrap">
+          <button type="submit" id="upload-btn" class="btn btn-primary" disabled>
+            Upload Selected Images
+          </button>
+          <a href="{% url 'admin:store_product_change' product.pk %}" class="btn btn-secondary">
+            ← Back to Product
+          </a>
+          <span id="file-count" class="text-muted"></span>
         </div>
-        <div class="submit-row">
-            <input type="submit" value="Upload" class="default">
-            <a href="{% url 'admin:store_product_change' product.pk %}" class="closelink">Cancel</a>
-        </div>
-    </form>
+      </form>
+    </div>
+  </div>
 </div>
+
+<!-- SortableJS from CDN -->
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ── Helpers ─────────────────────────────────────────────── */
+  const $ = id => document.getElementById(id);
+
+  // Renumber order badges in a grid
+  function renumberBadges(grid) {
+    grid.querySelectorAll('.order-badge').forEach((b, i) => {
+      b.textContent = i + 1;
+    });
+  }
+
+  /* ── Existing images sortable ────────────────────────────── */
+  const existingGrid = $('existing-grid');
+  const saveOrderBtn = $('save-order-btn');
+
+  if (existingGrid) {
+    Sortable.create(existingGrid, {
+      animation: 150,
+      ghostClass: 'sortable-ghost',
+      onEnd() {
+        renumberBadges(existingGrid);
+        if (saveOrderBtn) saveOrderBtn.style.display = 'inline-block';
+      }
+    });
+
+    if (saveOrderBtn) {
+      saveOrderBtn.addEventListener('click', function () {
+        const ids = [...existingGrid.querySelectorAll('.existing-card')]
+                      .map(c => parseInt(c.dataset.id, 10));
+
+        fetch('{% url "admin:store_product_reorder_images" product.pk %}', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': document.cookie.match(/csrftoken=([^;]+)/)?.[1] || ''
+          },
+          body: JSON.stringify({ image_ids: ids })
+        })
+        .then(r => r.json())
+        .then(data => {
+          if (data.success) {
+            const msg = $('order-saved-msg');
+            saveOrderBtn.style.display = 'none';
+            msg.style.display = 'inline';
+            setTimeout(() => msg.style.display = 'none', 3000);
+          }
+        })
+        .catch(err => alert('Error saving order: ' + err));
+      });
+    }
+  }
+
+  /* ── New image upload & preview ──────────────────────────── */
+  const dropZone    = $('drop-zone');
+  const fileInput   = $('file-input');
+  const previewGrid = $('preview-grid');
+  const hiddenInputs = $('hidden-inputs');
+  const uploadBtn   = $('upload-btn');
+  const fileCount   = $('file-count');
+  const dragHint    = $('drag-hint');
+
+  let fileList = []; // Ordered array of File objects
+
+  function buildPreviews() {
+    previewGrid.innerHTML = '';
+    fileList.forEach((file, idx) => {
+      const card = document.createElement('div');
+      card.className = 'preview-card';
+      card.dataset.idx = idx;
+
+      const badge = document.createElement('span');
+      badge.className = 'order-badge';
+      badge.textContent = idx + 1;
+
+      const img = document.createElement('img');
+      img.alt = file.name;
+      const reader = new FileReader();
+      reader.onload = e => img.src = e.target.result;
+      reader.readAsDataURL(file);
+
+      const label = document.createElement('div');
+      label.className = 'card-label';
+      label.title = file.name;
+      label.textContent = file.name.length > 18 ? file.name.slice(0, 16) + '…' : file.name;
+
+      const removeBtn = document.createElement('button');
+      removeBtn.className = 'remove-btn';
+      removeBtn.innerHTML = '✕';
+      removeBtn.title = 'Remove';
+      removeBtn.addEventListener('click', () => {
+        fileList.splice(idx, 1);
+        buildPreviews();
+        updateUploadBtn();
+      });
+
+      card.appendChild(badge);
+      card.appendChild(img);
+      card.appendChild(label);
+      card.appendChild(removeBtn);
+      previewGrid.appendChild(card);
+    });
+
+    // Make previews sortable
+    if (fileList.length > 0) {
+      Sortable.create(previewGrid, {
+        animation: 150,
+        ghostClass: 'sortable-ghost',
+        dragClass: 'sortable-drag',
+        onEnd() {
+          // Re-sync fileList order to match DOM order
+          const cards = [...previewGrid.querySelectorAll('.preview-card')];
+          const newOrder = cards.map(c => fileList[parseInt(c.dataset.idx, 10)]);
+          fileList = newOrder;
+          buildPreviews(); // rebuild with new indices
+          updateUploadBtn();
+        }
+      });
+    }
+  }
+
+  function updateUploadBtn() {
+    const count = fileList.length;
+    uploadBtn.disabled = count === 0;
+    fileCount.textContent = count > 0 ? `${count} image${count > 1 ? 's' : ''} selected` : '';
+    dragHint.style.display = count > 1 ? 'block' : 'none';
+  }
+
+  function addFiles(newFiles) {
+    for (const f of newFiles) {
+      if (f.type.startsWith('image/')) fileList.push(f);
+    }
+    buildPreviews();
+    updateUploadBtn();
+  }
+
+  // Click to open picker
+  dropZone.addEventListener('click', () => fileInput.click());
+  fileInput.addEventListener('change', e => addFiles(e.target.files));
+
+  // Drag & drop
+  dropZone.addEventListener('dragover', e => {
+    e.preventDefault();
+    dropZone.classList.add('drag-over');
+  });
+  ['dragleave', 'drop'].forEach(evt => {
+    dropZone.addEventListener(evt, () => dropZone.classList.remove('drag-over'));
+  });
+  dropZone.addEventListener('drop', e => {
+    e.preventDefault();
+    addFiles(e.dataTransfer.files);
+  });
+
+  // On form submit, inject files in the user's chosen order
+  $('upload-form').addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    // Build a DataTransfer with files in the current sorted order
+    const dt = new DataTransfer();
+    fileList.forEach(f => dt.items.add(f));
+
+    // Create (or reuse) a real file input with all files
+    let realInput = this.querySelector('input[name="images"]');
+    if (!realInput) {
+      realInput = document.createElement('input');
+      realInput.type = 'file';
+      realInput.name = 'images';
+      realInput.multiple = true;
+      realInput.style.display = 'none';
+      this.appendChild(realInput);
+    }
+    realInput.files = dt.files;
+    this.submit();
+  });
+})();
+</script>
 {% endblock %}

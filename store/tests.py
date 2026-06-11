@@ -130,3 +130,32 @@ class BlogTests(TestCase):
         response = self.client.get(reverse('blog'))
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "New Design Trends")
+
+class AdminCustomizationTests(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_superuser(username='admin', password='password', email='admin@example.com')
+        self.client.login(username='admin', password='password')
+        self.parent_cat = Category.objects.create(name='Parent Category', slug='parent-cat')
+        self.sub_cat = Category.objects.create(name='Sub Category', slug='sub-cat', parent=self.parent_cat)
+
+    def test_product_admin_form_category_choices(self):
+        from store.admin import ProductAdminForm
+        form = ProductAdminForm()
+        choices = form.fields['category'].choices
+        choice_labels = [label for _, label in choices]
+        self.assertIn('PARENT CATEGORY', choice_labels)
+        self.assertIn('   — Sub Category', choice_labels)
+
+class FrontendTests(TestCase):
+    def test_home_partners_section(self):
+        response = self.client.get(reverse('home'))
+        self.assertEqual(response.status_code, 200)
+        partners = [
+            'Crown Paints', 
+            'Mombasa Cement', 
+            'East African Portland', 
+            'Sika East Africa', 
+            'National Cement'
+        ]
+        for partner in partners:
+            self.assertContains(response, partner)

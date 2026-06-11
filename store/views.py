@@ -46,11 +46,19 @@ def store(request):
     return render(request, 'store/product_list.html', {'category': None, 'products': products})
 
 def category_detail(request, category_slug):
-    category = None
-    if category_slug:
-        category = get_object_or_404(Category, slug=category_slug)
-        products = Product.objects.filter(available=True, category=category)
-        return render(request, 'store/product_list.html', {'category': category, 'products': products})
+    category = get_object_or_404(Category, slug=category_slug, parent=None)
+    products = Product.objects.filter(available=True, category=category)
+    return render(request, 'store/product_list.html', {'category': category, 'products': products})
+
+def subcategory_detail(request, category_slug, sub_slug):
+    parent = get_object_or_404(Category, slug=category_slug, parent=None)
+    subcategory = get_object_or_404(Category, slug=sub_slug, parent=parent)
+    products = Product.objects.filter(available=True, category=subcategory)
+    return render(request, 'store/product_list.html', {
+        'category': subcategory,
+        'parent_category': parent,
+        'products': products,
+    })
 
 def product_detail(request, id):
     product = get_object_or_404(Product, id=id)

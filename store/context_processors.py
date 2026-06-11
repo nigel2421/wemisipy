@@ -54,8 +54,16 @@ def cart_and_wishlist_count(request):
         wishlist = request.session.get("wishlist", [])
         wishlist_count = len(wishlist)
 
+    # Only top-level categories; subcategories are accessible via .subcategories.all()
+    top_categories = (
+        Category.objects
+        .filter(parent=None)
+        .prefetch_related('subcategories')
+        .order_by('order', 'name')
+    )
+
     return {
-        "menu_categories": Category.objects.all(),
+        "menu_categories": top_categories,
         "cart_count": cart_count,
         "wishlist_count": wishlist_count,
     }
