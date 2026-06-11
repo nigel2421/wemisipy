@@ -57,7 +57,7 @@ def cart_and_wishlist_count(request):
     # Only top-level categories; subcategories are accessible via .subcategories.all()
     top_categories = (
         Category.objects
-        .filter(parent=None)
+        
         .prefetch_related('subcategories')
         .order_by('order', 'name')
     )
