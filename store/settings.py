@@ -19,10 +19,9 @@ SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'django-insecure-dev-only')
 DEBUG = not IS_PRODUCTION and os.getenv('DEBUG', 'True').lower() == 'true'
 
 # Allowed hosts depend on environment
-if IS_PRODUCTION:
-    ALLOWED_HOSTS = ['www.wemisi.com', 'wemisi.com', 'api.wemisi.com']
-else:
-    ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '*.local']
+
+ALLOWED_HOSTS = ['www.wemisi.com', 'wemisi.com', 'api.wemisi.com', '127.0.0.1', 'localhost', '*.local']
+
 
 # Application definition
 
