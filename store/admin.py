@@ -44,6 +44,10 @@ class CategoryAdmin(admin.ModelAdmin):
         return super().get_queryset(request).prefetch_related('subcategories')
 
 # ── Product Admin ───────────────────────────────────────────────────────────
+class ProductImageInline(admin.TabularInline):
+    model = ProductImage
+    extra = 1
+
 class ProductAdminForm(forms.ModelForm):
     class Meta:
         model = Product
@@ -71,7 +75,7 @@ class ProductAdmin(admin.ModelAdmin):
     list_editable = ['price', 'available']
     list_filter = ('category', 'available', 'is_featured')
     search_fields = ('name', 'description')
-    inlines = []
+    inlines = [ProductImageInline]
 
     def get_urls(self):
         urls = super().get_urls()

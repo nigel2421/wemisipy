@@ -1,0 +1,12 @@
+{% extends "admin/change_form.html" %}
+
+{% block object-tools-items %}
+    {{ block.super }}
+    {% if original.pk %}
+    <li>
+        <a href="{% url 'admin:store_product_bulk_upload' original.pk %}" class="historylink" style="background-color: #8224e3; color: white;">
+            📷 Bulk Upload Images
+        </a>
+    </li>
+    {% endif %}
+{% endblock %}
