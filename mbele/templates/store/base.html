@@ -14,293 +14,141 @@
     <!-- PWA & Favicon -->
     <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
     <link rel="manifest" href="/static/manifest.json">
-    <meta name="theme-color" content="#212529">
+    <meta name="theme-color" content="#1a1c1e">
     <link rel="apple-touch-icon" href="/static/store/images/icon.png">
     
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <style>
-        :root {
-            --primary-color: #000000;
-            --accent-color: #8224e3;
-            --glass-bg: rgba(255, 255, 255, 0.85);
-            --glass-border: rgba(255, 255, 255, 0.3);
-            --font-main: 'Outfit', sans-serif;
-        }
+        /* ── INDUSTRIAL PRECISION OVERRIDE LAYER ────────── */
+        /* These complement custom.css loaded above        */
 
-        body {
-            font-family: var(--font-main);
-            background-color: #fcfcfc;
-            color: #333;
+        /* Animated dropdown entrance */
+        @keyframes dropDown {
+            from { opacity: 0; transform: translateY(-6px); }
+            to   { opacity: 1; transform: translateY(0); }
         }
-
-        /* ── NAVBAR ─────────────────────────────────────── */
-        .navbar {
-            background: var(--glass-bg);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border-bottom: 1px solid var(--glass-border);
-            padding: 0.75rem 0;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
+        .cat-submenu {
+            animation: dropDown 0.18s ease forwards;
         }
-
-        .navbar-brand {
-            font-weight: 700;
-            font-size: 1.5rem;
-            letter-spacing: -1px;
-            color: var(--primary-color) !important;
-        }
-
-        .nav-link {
-            font-weight: 500;
-            color: #555 !important;
-            transition: color 0.2s;
-            padding: 0.5rem 0.85rem !important;
-        }
-
-        .nav-link:hover {
-            color: var(--accent-color) !important;
-        }
-
-        /* ── CATEGORY DROPDOWN ──────────────────────────── */
-        .cat-dropdown {
-            position: relative;
-        }
-
         .cat-dropdown > .nav-link {
             display: flex;
             align-items: center;
             gap: 4px;
         }
-
         .cat-dropdown > .nav-link .caret {
             font-size: 0.7rem;
             transition: transform 0.25s;
             opacity: 0.6;
         }
-
         .cat-dropdown:hover > .nav-link .caret,
         .cat-dropdown.open > .nav-link .caret {
             transform: rotate(180deg);
         }
 
-        .cat-submenu {
-            display: none;
-            position: absolute;
-            top: calc(100% + 6px);
-            left: 0;
-            min-width: 200px;
-            background: #fff;
-            border: 1px solid rgba(0,0,0,0.08);
-            border-radius: 10px;
-            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
-            padding: 6px 0;
-            z-index: 1100;
-            animation: dropDown 0.2s ease;
-        }
-
-        @keyframes dropDown {
-            from { opacity: 0; transform: translateY(-6px); }
-            to   { opacity: 1; transform: translateY(0); }
-        }
-
-        .cat-dropdown:hover .cat-submenu {
-            display: block;
-        }
-
-        .cat-submenu a {
-            display: block;
-            padding: 8px 18px;
-            font-size: 0.9rem;
-            color: #444;
-            text-decoration: none;
-            font-weight: 500;
-            transition: background 0.15s, color 0.15s;
-        }
-
-        .cat-submenu a:hover {
-            background: #f5f0ff;
-            color: var(--accent-color);
-        }
-
-        /* ── BADGES ─────────────────────────────────────── */
-        .cart-badge {
-            position: absolute;
-            top: -5px;
-            right: -8px;
-            font-size: 0.65rem;
-            background-color: var(--accent-color);
-            color: white;
-            border-radius: 50%;
-            padding: 2px 5px;
-            font-weight: 700;
-        }
-
-        /* ── MOBILE SLIDE-IN MENU ───────────────────────── */
-        .slide-in-menu {
-            position: fixed;
-            top: 0;
-            left: -320px;
-            width: 300px;
-            height: 100vh;
-            background: #fff;
-            z-index: 2000;
-            box-shadow: 4px 0 20px rgba(0,0,0,0.15);
-            transition: left 0.3s cubic-bezier(0.4,0,0.2,1);
-            overflow-y: auto;
-            padding: 1.25rem;
-        }
-
-        .slide-in-menu.open {
-            left: 0;
-        }
-
-        .mobile-search-form input {
-            border-radius: 8px;
-        }
-
-        /* Mobile nav items */
-        .slide-in-menu .nav-link {
-            padding: 0.6rem 0 !important;
-            border-bottom: 1px solid #f0f0f0;
-            color: #333 !important;
-            font-weight: 600;
-        }
-
-        /* Mobile accordion for subcategories */
-        .mobile-cat-item {
-            border-bottom: 1px solid #f0f0f0;
-        }
-
-        .mobile-cat-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0.6rem 0;
-            cursor: pointer;
-            font-weight: 600;
-            color: #333;
-            text-decoration: none;
-        }
-
-        .mobile-cat-header:hover {
-            color: var(--accent-color);
-        }
-
-        .mobile-cat-toggle {
-            background: none;
-            border: none;
-            padding: 0 4px;
-            color: #aaa;
-            font-size: 0.8rem;
-            transition: transform 0.25s;
-            cursor: pointer;
-        }
-
-        .mobile-cat-toggle.expanded {
-            transform: rotate(180deg);
-        }
-
-        .mobile-subcats {
-            display: none;
-            padding: 0 0 0.5rem 1rem;
-            background: #fafafa;
-            border-radius: 6px;
-            margin-bottom: 4px;
-        }
-
-        .mobile-subcats.open {
-            display: block;
-        }
-
-        .mobile-subcats a {
-            display: block;
-            padding: 6px 0;
-            font-size: 0.88rem;
-            color: #555;
-            text-decoration: none;
-            font-weight: 500;
-            transition: color 0.15s;
-        }
-
-        .mobile-subcats a:hover {
-            color: var(--accent-color);
-        }
-
-        .mobile-nav-icons {
-            display: flex;
-            gap: 1.25rem;
-            margin-top: 1.25rem;
-        }
-
-        /* ── MARQUEE ────────────────────────────────────── */
+        /* Marquee band */
         .marquee-container {
             overflow: hidden;
             white-space: nowrap;
-            background: #fff;
-            padding: 2rem 0;
-            border-top: 1px solid #eee;
-            border-bottom: 1px solid #eee;
+            background: #1a1c1e;
+            padding: 1.5rem 0;
+            border-top: 1px solid rgba(255,255,255,0.06);
+            border-bottom: 1px solid rgba(255,255,255,0.06);
         }
-
         .marquee-content {
             display: inline-block;
             animation: marquee 30s linear infinite;
         }
-
         .marquee-item {
             display: inline-block;
             margin: 0 3rem;
-            font-size: 1.25rem;
+            font-size: 1.1rem;
             font-weight: 700;
-            color: #ccc;
+            color: rgba(255,255,255,0.25);
             text-transform: uppercase;
-            letter-spacing: 2px;
+            letter-spacing: 3px;
         }
-
+        .marquee-item span.accent {
+            color: #f15a24;
+        }
         @keyframes marquee {
             from { transform: translateX(0); }
             to   { transform: translateX(-50%); }
         }
 
-        /* ── FOOTER ─────────────────────────────────────── */
-        .footer {
-            background: #000;
-            color: #fff;
-            padding: 4rem 0 2rem;
-            margin-top: 5rem;
-        }
-
-        .footer h5 {
-            font-weight: 700;
-            margin-bottom: 1.5rem;
-            color: #fff;
-        }
-
-        .footer a {
-            color: rgba(255,255,255,0.6);
-            text-decoration: none;
-            transition: 0.3s;
-        }
-
-        .footer a:hover {
-            color: #fff;
-        }
-
-        /* Overlay for mobile menu */
+        /* Overlay for mobile drawer */
         #menu-overlay {
             display: none;
             position: fixed;
             inset: 0;
-            background: rgba(0,0,0,0.4);
-            z-index: 1999;
+            background: rgba(0,0,0,0.6);
+            z-index: 2040;
+            backdrop-filter: blur(2px);
         }
-
         #menu-overlay.active {
             display: block;
         }
+
+        /* Mobile close / header row */
+        .mobile-menu-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.25rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+        .mobile-menu-header .brand {
+            font-weight: 800;
+            font-size: 1.3rem;
+            color: #fff;
+            letter-spacing: -0.5px;
+        }
+        .mobile-menu-header .brand::after {
+            content: '';
+            display: inline-block;
+            width: 7px;
+            height: 7px;
+            background: #f15a24;
+            margin-left: 3px;
+            border-radius: 50%;
+        }
+        #close-menu {
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.12);
+            color: rgba(255,255,255,0.8);
+            border-radius: 4px;
+            padding: 0.3rem 0.65rem;
+            font-size: 1rem;
+            transition: background 0.2s;
+        }
+        #close-menu:hover {
+            background: rgba(241,90,36,0.15);
+            color: #f15a24;
+        }
+
+        /* Mini-cart drawer (no style change needed beyond base) */
+        #mini-cart-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 2100;
+        }
+        #mini-cart-drawer {
+            position: fixed;
+            top: 0;
+            right: -420px;
+            width: 400px;
+            max-width: 95vw;
+            height: 100vh;
+            background: #fff;
+            z-index: 2110;
+            box-shadow: -5px 0 30px rgba(0,0,0,0.2);
+            transition: right 0.3s cubic-bezier(0.4,0,0.2,1);
+            overflow-y: auto;
+        }
+        #mini-cart-drawer.open { right: 0; }
     </style>
 </head>
 <body>
@@ -376,45 +224,49 @@
     <!-- Overlay (closes mobile menu) -->
     <div id="menu-overlay"></div>
 
-    <!-- Slide-in Menu for Mobile -->
+    <!-- Slide-in Drawer for Mobile -->
     <div class="slide-in-menu" id="mobile-menu" aria-hidden="true">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <span class="fw-bold fs-5">Menu</span>
-            <button id="close-menu" class="btn btn-sm btn-light" aria-label="Close menu">
+
+        <!-- Drawer Header -->
+        <div class="mobile-menu-header">
+            <span class="brand">WEMISI</span>
+            <button id="close-menu" aria-label="Close menu">
                 <i class="bi bi-x-lg"></i>
             </button>
         </div>
 
-        <form method="GET" action="{% url 'store' %}" class="mobile-search-form mb-3">
+        <!-- Search -->
+        <form method="GET" action="{% url 'store' %}" class="mobile-search-form mb-4">
             <input class="form-control" type="search" name="q" autocomplete="off"
-                   placeholder="Search..." value="{{ request.GET.q }}">
+                   placeholder="Search products..." value="{{ request.GET.q }}">
         </form>
 
+        <!-- Nav links -->
         <nav>
             <ul class="nav flex-column">
-                <li class="nav-item mobile-cat-item">
-                    <a class="nav-link" href="{% url 'home' %}">Home</a>
+                <li class="mobile-cat-item">
+                    <a class="mobile-cat-header" href="{% url 'home' %}">Home</a>
                 </li>
-                <li class="nav-item mobile-cat-item">
-                    <a class="nav-link" href="{% url 'store' %}">Store</a>
+                <li class="mobile-cat-item">
+                    <a class="mobile-cat-header" href="{% url 'store' %}">Store</a>
                 </li>
 
-                {# ── Mobile categories with accordion ── #}
+                {# ── Mobile categories: nested accordion with chevron ── #}
                 {% for cat in menu_categories %}
                 <li class="mobile-cat-item">
                     {% if cat.subcategories.all %}
-                    <div style="display:flex;align-items:center;justify-content:space-between;">
+                    <div class="mobile-cat-header-wrapper">
                         <a class="mobile-cat-header" href="{% url 'category_detail' cat.slug %}">
                             {{ cat.name }}
                         </a>
-                        <button class="mobile-cat-toggle" 
+                        <button class="mobile-cat-toggle"
                                 aria-expanded="false"
                                 aria-controls="mobile-sub-{{ cat.slug }}"
                                 data-target="mobile-sub-{{ cat.slug }}">
                             <i class="bi bi-chevron-down"></i>
                         </button>
                     </div>
-                    <div class="mobile-subcats" id="mobile-sub-{{ cat.slug }}">
+                    <div class="mobile-subcats" id="mobile-sub-{{ cat.slug }}" role="list">
                         <a href="{% url 'category_detail' cat.slug %}">All {{ cat.name }}</a>
                         {% for sub in cat.subcategories.all %}
                         <a href="{% url 'subcategory_detail' cat.slug sub.slug %}">{{ sub.name }}</a>
@@ -428,21 +280,22 @@
                 </li>
                 {% endfor %}
 
-                <li class="nav-item mobile-cat-item">
-                    <a class="nav-link" href="{% url 'blog' %}">Blog</a>
+                <li class="mobile-cat-item">
+                    <a class="mobile-cat-header" href="{% url 'blog' %}">Blog</a>
                 </li>
-                <li class="nav-item mobile-cat-item">
-                    <a class="nav-link" href="{% url 'careers' %}">Careers</a>
+                <li class="mobile-cat-item">
+                    <a class="mobile-cat-header" href="{% url 'careers' %}">Careers</a>
                 </li>
             </ul>
         </nav>
 
+        <!-- Bottom icons -->
         <div class="mobile-nav-icons">
-            <a href="{% url 'wishlist_detail' %}" class="text-dark position-relative nav-icon">
+            <a href="{% url 'wishlist_detail' %}" class="nav-icon position-relative">
                 <i class="bi bi-heart"></i>
                 <span id="wishlist-badge-mobile" class="cart-badge">{{ wishlist_count|default:"0" }}</span>
             </a>
-            <a href="{% url 'cart_detail' %}" class="text-dark position-relative nav-icon">
+            <a href="{% url 'cart_detail' %}" class="nav-icon position-relative">
                 <i class="bi bi-cart3"></i>
                 <span id="cart-badge-mobile" class="cart-badge">{{ cart_count|default:"0" }}</span>
             </a>
@@ -456,20 +309,31 @@
 
     <footer>
         <div class="container">
-            <div class="row">
+            <div class="row g-4">
                 <div class="col-md-4">
                     <h5>WEMISI</h5>
-                    <p>The leading Kenyan supplier of high-quality interior design products.</p>
+                    <p style="color:rgba(255,255,255,0.55); font-size:0.9rem; line-height:1.7;">The leading Kenyan supplier of high-quality building and interior design materials — marble, gypsum, steel, and more.</p>
                 </div>
                 <div class="col-md-4">
                     <h5>Contact Us</h5>
-                    <p>WhatsApp: +254 721 202052<br>Email: hello@wemisi.com</p>
+                    <p style="color:rgba(255,255,255,0.55); font-size:0.9rem;">
+                        <i class="bi bi-whatsapp me-1" style="color:#f15a24;"></i> <a href="https://wa.me/254721202052">+254 721 202052</a><br>
+                        <i class="bi bi-envelope me-1" style="color:#f15a24;"></i> <a href="mailto:hello@wemisi.com">hello@wemisi.com</a><br>
+                        <i class="bi bi-clock me-1" style="color:#f15a24;"></i> Mon – Sat, 8:00am – 6:00pm
+                    </p>
                 </div>
                 <div class="col-md-4">
-                    <h5>Staff</h5>
-                    <a href="/admin">Admin Login</a>
+                    <h5>Quick Links</h5>
+                    <ul style="list-style:none; padding:0; margin:0;">
+                        <li><a href="{% url 'store' %}">Store</a></li>
+                        <li><a href="{% url 'blog' %}">Blog</a></li>
+                        <li><a href="{% url 'careers' %}">Careers</a></li>
+                        <li><a href="/admin">Admin Login</a></li>
+                    </ul>
                 </div>
             </div>
+            <hr style="border-color:rgba(255,255,255,0.08); margin-top:2.5rem;">
+            <p style="text-align:center; color:rgba(255,255,255,0.3); font-size:0.8rem; margin:0;">&copy; {% now "Y" %} WEMISI. All rights reserved.</p>
         </div>
     </footer>
 

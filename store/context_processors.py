@@ -3,9 +3,13 @@ from .models import Category
 
 def categories_processor(request):
     """
-    Provides all categories for use in navigation menus.
+    Provides all top-level categories for use in navigation menus.
     """
-    return {"menu_categories": Category.objects.all()}
+    return {
+        "menu_categories": Category.objects.filter(parent=None)
+                                           .prefetch_related('subcategories')
+                                           .order_by('order', 'name')
+    }
 
 
 def cart_processor(request):
@@ -28,21 +32,20 @@ def wishlist_processor(request):
 def cart_and_wishlist_count(request):
     """
     Combined context processor used in settings.TEMPLATES to supply:
-      - menu_categories: for the categories dropdown
+      - menu_categories: top-level parent categories (with subcategories prefetched)
       - cart_count: total items in the cart
       - wishlist_count: total items in the wishlist
     """
     from .models import Cart, Wishlist
-    
+
     cart_count = 0
     wishlist_count = 0
-    
+
     if request.user.is_authenticated:
-        # Get count from database
         cart = Cart.objects.filter(user=request.user).first()
         if cart:
             cart_count = sum(item.quantity for item in cart.items.all())
-        
+
         wishlist = Wishlist.objects.filter(user=request.user).first()
         if wishlist:
             wishlist_count = wishlist.products.count()
@@ -50,16 +53,16 @@ def cart_and_wishlist_count(request):
         # Fall back to session for guest users
         cart = request.session.get("cart", {})
         cart_count = sum(cart.values())
-        
+
         wishlist = request.session.get("wishlist", [])
         wishlist_count = len(wishlist)
 
-    # Only top-level categories; subcategories are accessible via .subcategories.all()
+    # Only top-level parents; subcategories accessible via .subcategories.all() in templates
     top_categories = (
         Category.objects
-
+        .filter(parent=None)
         .prefetch_related('subcategories')
-        .order_by('name')
+        .order_by('order', 'name')
     )
 
     return {

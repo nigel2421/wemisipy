@@ -18,6 +18,7 @@ class BlogPostForm(forms.ModelForm):
         }
 
 # ── Category Admin ──────────────────────────────────────────────────────────
+
 class SubcategoryInline(admin.TabularInline):
     model = Category
     fk_name = 'parent'
@@ -25,23 +26,100 @@ class SubcategoryInline(admin.TabularInline):
     fields = ('name', 'slug', 'order')
     prepopulated_fields = {'slug': ('name',)}
     verbose_name = "Subcategory"
-    verbose_name_plural = "Subcategories"
+    verbose_name_plural = "Subcategories (shown in nav dropdown)"
+    show_change_link = True
+
+    def get_queryset(self, request):
+        return super().get_queryset(request).order_by('order', 'name')
+
+
+class TopLevelFilter(admin.SimpleListFilter):
+    """Filter: show only top-level parents or only subcategories."""
+    title = 'Level'
+    parameter_name = 'level'
+
+    def lookups(self, request, model_admin):
+        return [
+            ('top', 'Top-level (Parent Categories)'),
+            ('sub', 'Subcategories'),
+        ]
+
+    def queryset(self, request, queryset):
+        if self.value() == 'top':
+            return queryset.filter(parent__isnull=True)
+        if self.value() == 'sub':
+            return queryset.filter(parent__isnull=False)
+        return queryset
+
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('name',)}
-    list_display = ('name', 'parent', 'order', 'subcategory_count')
-    list_filter = ('parent',)
+    list_display = ('display_name', 'level_badge', 'parent', 'order', 'subcategory_count', 'product_count_display')
+    list_display_links = ('display_name',)
+    list_filter = (TopLevelFilter, 'parent')
     list_editable = ('order',)
     inlines = [SubcategoryInline]
     search_fields = ('name',)
+    fieldsets = (
+        ('Category Details', {
+            'fields': ('name', 'slug', 'order'),
+            'description': (
+                '<strong>Name</strong>: The display label for this category.<br>'
+                '<strong>Slug</strong>: Auto-filled URL-safe version of the name.<br>'
+                '<strong>Order</strong>: Controls position in the nav (lower = first).'
+            ),
+        }),
+        ('Parent / Hierarchy', {
+            'fields': ('parent',),
+            'description': (
+                'Leave <em>Parent</em> blank to make this a <strong>top-level nav item</strong>. '
+                'Select a parent to nest this as a <strong>subcategory dropdown item</strong>.'
+            ),
+        }),
+    )
+
+    # ── Custom display columns ─────────────────────────────────────────────
+
+    def display_name(self, obj):
+        if obj.parent:
+            return format_html(
+                '<span style="margin-left:20px; color:#555;">↳ {}</span>', obj.name
+            )
+        return format_html('<strong>{}</strong>', obj.name)
+    display_name.short_description = 'Category Name'
+    display_name.admin_order_field = 'name'
+
+    def level_badge(self, obj):
+        if obj.parent is None:
+            return format_html(
+                '<span style="background:#1a1c1e;color:#fff;padding:2px 8px;'
+                'border-radius:3px;font-size:0.75rem;font-weight:600;">PARENT</span>'
+            )
+        return format_html(
+            '<span style="background:#f15a24;color:#fff;padding:2px 8px;'
+            'border-radius:3px;font-size:0.75rem;">sub</span>'
+        )
+    level_badge.short_description = 'Level'
 
     def subcategory_count(self, obj):
-        return obj.subcategories.count()
+        count = obj.subcategories.count()
+        if count:
+            return format_html('<strong style="color:#1a1c1e;">{}</strong>', count)
+        return '—'
     subcategory_count.short_description = 'Subcategories'
 
+    def product_count_display(self, obj):
+        count = obj.products.count()
+        if count:
+            return format_html('<span style="color:#16a34a;">{} products</span>', count)
+        return format_html('<span style="color:#94a3b8;">0</span>')
+    product_count_display.short_description = 'Products'
+
     def get_queryset(self, request):
-        return super().get_queryset(request).prefetch_related('subcategories')
+        return super().get_queryset(request).select_related('parent').prefetch_related('subcategories', 'products')
+
+
 
 # ── Product Admin ───────────────────────────────────────────────────────────
 class ProductImageInline(admin.TabularInline):
